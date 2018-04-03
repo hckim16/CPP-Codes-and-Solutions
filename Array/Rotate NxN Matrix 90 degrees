@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+//Rotate by moving number in [0][0] corner down to [n][0] corner, then corner [0][n] to [0][0], then corner [n][n] to [0][n], finally [n][0] to [n][n]
+//Then rotate [0][1] to [n-1][0], then [1][n] to [0][1], then [n][n-1] to [1][n], then [n-1][0] to [n][n-1]
+//Repeat until all numbers have rotated
+void rotate(vector<vector<int>> &vec , int n){
+    int temp;
+    for(int i = 0; i < n/2; i++){ 
+        for( int j = i; j < n - i - 1; j++){ //setting j to i ensures that the loop correctly drops to inner layer, if there is one
+            temp = vec[i][j]; //first number to swap stored in temp to open initial hole
+            vec[i][j] = vec[j][n-1-i]; // indexes change to ensure that matrix indices are correct for swap
+            vec[j][n-1-i] = vec[n-1-i][n-1-j];
+            vec[n-1-i][n-1-j] = vec[n-1-j][i];
+            vec[n-1-j][i] = temp;
+        }
+    }
+}
+
+void displayArray(vector<vector<int>> vec, int n){
+    
+    cout << "After rotation: " << endl;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            cout << vec[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main(){
+    
+    int n;
+    cout << "Enter size of matrix: ";
+    cin >> n;
+    
+    int a;
+    vector<vector<int>> vec;
+    
+    for(int i = 0; i < n; i++){
+        vector<int>row;
+        for(int j = 0; j < n; j++){
+            cout << "Enter number: ";
+            cin >> a;
+            row.push_back(a);
+        }
+        vec.push_back(row);
+    }
+    
+    cout << "Before rotation: " << endl;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            cout << vec[i][j] << " ";
+        }
+        cout << endl;
+    }
+    
+    rotate(vec, n);
+    displayArray(vec, n);
+    
+    return 0;
+}
