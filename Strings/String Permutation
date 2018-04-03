@@ -1,0 +1,36 @@
+//Check if two strings are permutations
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string sortString(string &s){
+    
+    sort(s.begin(), s.end());
+    return s;
+}
+
+void compareStrings(string s1, string s2){
+    if(s1.compare(s2) == 0)
+        cout << "The two strings are permutations" << endl;
+    else
+        cout << "The two strings are not permutations" << endl;
+}
+
+using namespace std;
+
+int main() {
+    
+    string str1;
+    string str2;
+    cout << "Enter first string: ";
+    cin >> str1;
+    cout << "Enter second string: ";
+    cin >> str2;
+    
+    sortString(str1);
+    sortString(str2);
+    
+    compareStrings(str1, str2);
+}
