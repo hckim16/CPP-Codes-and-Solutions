@@ -1,0 +1,40 @@
+//instead of a void function
+    //could use bool and return true or false
+    //or return a string and output the status in the main
+    //Different options to output and practice with
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// function to check if string is rotation of another string
+void isRotation(string s1, string s2){
+    
+    //check to see if terwa(s2) is a rotation of water(s1), the break is ter and wa.
+    //that would be the same as wa-ter/wa -ter or waterwater.  
+    //So basically checking to see if terwa is substring of waterwater.  
+    //This works if checking for bowlwater(s2) rotation of waterbowl(s1) - water"bowlwater"bowl.
+    //concatenate s1 to s1
+    string s1s1 = s1 + s1;
+    //check if s2 is in s1 
+    if(s1s1.find(s2) != string::npos)
+        cout << "String 2 is a rotation of String 1" << endl;
+    else
+        cout << "String 2 is not a rotation of String 1" << endl;
+}
+
+
+int main(){
+    
+    string s1;
+    cout << "Enter String 1: ";
+    cin >> s1;
+    string s2;
+    cout << "Enter String 2: ";
+    cin >> s2;
+    
+    isRotation(s1, s2);
+
+    return 0;
+}
