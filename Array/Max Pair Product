@@ -1,0 +1,36 @@
+//Return product of the 2 largest digits in an array
+//From edX - Algorithmic Design and Techniques
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+double findMax(vector<double> &a){
+    sort(a.begin(), a.end()); //sort array
+    double product = a.back() * *(a.rbegin()+1); //multiple last two numbers
+    return product;
+    
+}
+
+using namespace std;
+
+int main() {
+    
+    int n;
+    cin >> n;
+    vector<double> a(n);
+    
+    for(int i = 0; i < n; i++){
+        cin >> a[i];
+    }
+    
+    double result = findMax(a);
+    cout << setprecision(0) << fixed; //for very large answers, compiler could return scientific notation as default, this keeps it "normal"
+    cout << result;
+
+    
+    return 0;
+}
