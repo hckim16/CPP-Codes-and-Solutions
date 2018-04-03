@@ -121,7 +121,7 @@ int main() {
     Jack.display();
     cout << endl;
     
-    Jack.deleteNode(6);
+    Jack.deleteNode(6); //Remove 6th Node
     Jack.display();
     
     return 0;
