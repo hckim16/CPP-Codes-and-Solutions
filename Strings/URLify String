@@ -1,0 +1,30 @@
+//URLify, replace space with "%20"
+    //Stumbled upon this simple code at Stack Overflow.  https://stackoverflow.com/questions/2687428/replacing-space-with-20?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    To replace a character with a character is a straightforward loop operation at O(n) but 
+    replacing one character with more than one character is a bit more complicated.  I had 
+    some issues but this code is fairly straightforward I think. It uses the find and replace 
+    functions for strings.
+    
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+
+void findSpace(string s){
+    for(size_t pos = s.find(' '); pos != string::npos; pos = s.find(' ', pos)){
+        s.replace(pos, 1, "%20");
+    }
+    cout << s << endl;
+}
+
+int main(){
+    
+    string s;
+    cout << "enter string: ";
+    getline(cin, s);
+    findSpace(s);
+    
+    return 0;
+}
