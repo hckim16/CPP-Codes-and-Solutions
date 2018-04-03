@@ -1,0 +1,239 @@
+//Probably a better, more efficient algorithm out there
+//But this solution works for all cases
+//Challenge for me was calculating and adding the carry over correctly, that is 7 + 8 = 15, but 5 add and 1 carried over
+//That one caused me all kinds of problems, but solved using nested if statements.  
+//Probably a better way out there
+//commented out "cout" statements were my debugging checks
+
+// Header file
+
+#ifndef list_hpp
+#define list_hpp
+
+#include <stdio.h>
+
+class list{
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    node *head;
+    node *current;
+public:
+    list();
+    ~list();
+    void addFront(int e);
+    void addBack(int e);
+    bool isEmpty();
+    void remove();
+    node *getHead();
+    void display();
+    int getLength();
+    void addList(list a, list b);
+    
+};
+
+
+
+#endif /* list_hpp */
+
+// Implementation File
+
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
+
+#include "list.hpp"
+
+using namespace std;
+
+list::list(){
+    head = NULL;
+    current = NULL;
+}
+
+list::~list(){
+    while(!isEmpty()){
+        remove();
+    }
+}
+ 
+bool list::isEmpty(){
+    return (head == NULL);
+}
+
+list::node *list::getHead(){
+    return head;
+}
+
+void list::remove(){
+    if(!isEmpty()){
+        node *old = new node;
+        old = head;
+        head = old->next;
+    }
+    else{
+        exit(1);
+    }
+}
+
+void list::addFront(int v){
+    node *temp = new node;
+    temp-> value = v;
+    temp-> next = head;
+    head = temp;
+    cout << temp-> value << endl;
+    delete temp;
+}
+
+void list::addBack(int v){
+    //cout << "am I adding in back" << endl;
+    node *temp = new node;
+    temp-> next = NULL;
+    temp-> value = v;
+    if(head != NULL){
+        current = head;
+        while(current-> next != NULL){
+            current = current-> next;
+        }
+        current-> next = temp;
+    }
+    else{
+        head = temp;
+    }
+    //cout << temp-> value << endl;
+}
+
+
+void list::display(){
+    current = head;
+    while(current != NULL){
+        cout << current-> value << " ";
+        current = current-> next;
+    }
+    cout << endl;
+}
+
+int list::getLength(){                                    //For when linked list are diffrent lengths                           
+    
+    current = head;
+    int len = 0;
+    
+    while(current != NULL){
+        len++;
+        current = current-> next;
+    }
+    
+    return len;
+}
+
+void list::addList(list a, list b){                       //Function to add linked list, passes two lists int
+    
+    node *temp = a.getHead();                             //Get the head nodes
+    node *temp1 = b.getHead();
+  
+    list sumList;
+    int sum;
+    int carry = 0;
+    
+    int x = a.getLength();                                //Get the lengths
+    int y = b.getLength();
+    
+    int diff = abs(x - y);
+    
+    if(x > y){                                            //equalize the lengths by adding zeros to end of shorter list
+        for(int i = 1; i <= diff; i++){
+            b.addBack(0);
+        }
+    }
+    else{
+        for(int i = 1; i <= diff; i++){
+            a.addBack(0);
+        }
+    }
+    
+    while(temp != NULL || temp1 != NULL){                 //While lists are not empty
+        sum = temp->value + temp1->value;                 //the values 
+        if(sum > 9){                                      //if the sum is greater than 9
+            sumList.addBack((sum % 10) + carry);          //Module by 10, add carry and add to sum list (initially carry is zero, so it doesn't affect first addition but need for subsequent additions)
+            carry = 1;                                    //set carry to 1 to carry over to next addition
+        }
+        else{
+            //cout << "what is carry - " << carry << endl;
+            if((sum + carry) > 9){                        //if sum of carry and values greater 9
+                //cout << "what is carry plus sum  - " << sum + carry << endl;    //repeat step 159
+                sumList.addBack((sum + carry) % 10);
+                carry = 1;
+            }
+            else{
+                sumList.addBack(sum + carry);             //if sum + carry less than 9, add
+                carry = 0;
+            }
+        }
+        temp = temp-> next;                               //move to next set of nodes
+        temp1 = temp1-> next;
+    }
+    if(carry == 1){                                       //if carry exist after list is complete
+        sumList.addBack(carry);                           //add 1
+    }
+    
+    sumList.display();
+}
+
+// Main File
+
+#include <iostream>
+#include <cstdlib>
+
+#include "list.hpp"
+
+using namespace std;
+
+
+int main() {
+    
+    list a;
+    list b;
+    list c;
+    list d;
+    list e;
+    list f;
+    list g;
+    list h;
+    list i;
+    
+    a.addBack(7);
+    a.addBack(1);
+    a.addBack(6);
+    a.display();
+    b.addBack(5);
+    b.addBack(9);
+    b.addBack(2);
+    b.display();
+    g.addList(a, b);
+    cout << endl;
+    c.addBack(6);
+    c.addBack(4);
+    c.addBack(7);
+    c.display();
+    d.addBack(4);
+    d.addBack(3);
+    d.addBack(9);
+    d.display();
+    h.addList(c, d);
+    cout << endl;
+    e.addBack(7);
+    e.addBack(5);
+    e.addBack(9);
+    e.addBack(4);
+    e.addBack(6);
+    e.display();
+    f.addBack(8);
+    f.addBack(4);
+    f.display();
+    i.addList(e, f);
+    cout << endl;
+    
+    return 0;
+}
