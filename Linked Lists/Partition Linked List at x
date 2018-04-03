@@ -1,0 +1,144 @@
+//Header File
+
+#ifndef singly_hpp
+#define singly_hpp
+
+#include <stdio.h>
+
+class list{
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    node *head;
+    node *current;
+public:
+    list();
+    //~list();
+    void addNode(int e);
+    void display();
+    bool isEmpty();
+    //void remove();
+    void partitionList(int x);
+    node *getHead();
+    void appendList(node *a, node *b);
+};
+
+#endif /* singly_hpp */
+
+//Implementation File
+
+#include <iostream>
+#include <cstdlib>
+
+#include "singly.hpp"
+
+using namespace std;
+
+list::list(){
+    head = NULL;
+    current = NULL;
+}
+/* Destructor giving me an allocation error, commented out to execute but could be causing memory leak
+list::~list(){
+    while(!isEmpty()){
+        remove();
+    }
+}
+*/
+bool list::isEmpty(){
+    return (head == NULL);
+}
+/* delete memory allocation causing me problems so commented out to run fil but could be causing memory leak
+void list::remove(){
+    node *old = head;
+    head = old->next;
+    delete old;
+}
+*/
+void list::addNode(int e){
+    node *v = new node;
+    v-> next = NULL;
+    v-> value = e;
+    if(head != NULL){
+        current = head;
+        while(current-> next != NULL){
+            current = current-> next;
+        }
+        current-> next = v;
+    }
+    else{
+        head = v;
+    }
+}
+
+void list::display(){
+    current = head;
+    while(current != NULL){
+        cout << current-> value << " ";
+        current = current-> next;
+    }
+    cout << endl;
+}
+
+void list::partitionList(int x){ 
+    list a;                                       //create two list for partition
+    list b;
+    current = head;                               //set head of original list to current
+    while(current != NULL){                       //iterate through original list and copy according to lessor or greater than x
+        if(current->value < x)
+            a.addNode(current-> value);
+        else if(current-> value >= x)
+            b.addNode(current-> value);
+        current = current-> next;                 //increment along original list
+    }
+    a.display();                                  //check to see partition occurred correctly
+    b.display();
+    cout << endl;
+    list::appendList(a.getHead(), b.getHead());   //append list b to list a
+    a.display();
+}
+
+list::node *list::getHead(){                      //function to get head node of a list
+    return head;
+}
+
+void list::appendList(node *a, node *b){          //append head node of list b to tail node list a
+    if(a != NULL && b != NULL){                   //only if both list is not empty
+        if(a-> next == NULL)      
+            a->next = b;                          //if a tail is pointing to null, set it to b head
+        else
+            appendList(a-> next, b);              //otherwise recursively continue append function 
+    }
+    else
+        cout << "One or both list are empty" << endl;
+}
+
+//Main File
+
+#include <iostream>
+#include <cstdlib>
+
+#include "singly.hpp"
+
+using namespace std;
+
+
+int main() {
+    
+    list Jack;
+    
+    Jack.addNode(3);
+    Jack.addNode(6);
+    Jack.addNode(9);
+    Jack.addNode(1);
+    Jack.addNode(3);
+    Jack.addNode(6);
+    Jack.addNode(7);
+    Jack.display();
+    cout << endl;
+    Jack.partitionList(6);
+    
+    return 0;
+}
