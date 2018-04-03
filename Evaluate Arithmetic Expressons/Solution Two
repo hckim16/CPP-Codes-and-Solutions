@@ -1,0 +1,311 @@
+//No parenthesis
+//infix equations only
+//Multiplication and divisions done first
+//Additions and Subtractions done second
+//O(n) operation.  For loop and while loops done separated, not nested, so worst case should still be O9(n)
+
+// Header File
+
+#ifndef evaluate1_hpp
+#define evaluate1_hpp
+
+#include <stdio.h>
+
+using namespace std;
+
+class Node{
+private:
+    char sign;
+    int number;
+    Node *next;
+public:
+    friend class signStack;
+    friend class numStack;
+};
+
+class signStack{
+private:
+    Node *head;
+public:
+    signStack();
+    ~signStack();
+    void push(char op);
+    char pop();
+    char top();
+    bool isEmpty();
+};
+
+class numStack{
+private:
+    Node *head;
+public:
+    numStack();
+    ~numStack();
+    void push(int val);
+    int pop();
+    int top();
+    bool isEmpty();
+};
+
+#endif /* evaluate1_hpp */
+
+// Implementation File
+
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdlib>
+
+#include "evaluate1.hpp"
+
+using namespace std;
+
+signStack::signStack(){ head = NULL; }
+
+numStack::numStack(){ head = NULL;}
+
+signStack::~signStack(){
+    while(!isEmpty())
+        pop();
+}
+
+numStack::~numStack(){
+    while(!isEmpty())
+        pop();
+}
+
+bool signStack::isEmpty(){
+    return (head == NULL);
+}
+
+bool numStack::isEmpty(){
+    return (head == NULL);
+}
+
+char signStack::top(){
+    if(!isEmpty()){
+        return head-> sign;
+    }
+    else{
+        cout << "The stack is empty" << endl;
+        exit(1);
+    }
+}
+
+int numStack::top(){
+    if(!isEmpty()){
+        return head-> number;
+    }
+    else{
+        cout << "The stack is empty" << endl;
+        exit(1);
+    }
+}
+
+void signStack::push(char op){
+    Node *temp = new Node;
+    temp-> sign = op;
+    temp-> next = head;
+    head = temp;
+}
+
+void numStack::push(int val){
+    Node *temp = new Node;
+    temp-> number = val;
+    temp-> next = head;
+    head = temp;
+}
+
+char signStack::pop(){
+    if(!isEmpty()){
+        char op = head-> sign;
+        Node *temp = head;
+        head = temp-> next;
+        delete temp;
+        return op;
+    }
+    else{
+        cout << "You can't pop from an empty signStack" << endl;
+        exit(1);
+    }
+}
+
+int numStack::pop(){
+    //cout << "did i begin num pop" << endl;
+    if(!isEmpty()){
+        int val = head-> number;
+        Node *temp = head;
+        head = temp-> next;
+        delete temp;
+        return val;
+    }
+    else{
+        cout << "You can't pop from an empty numStack" << endl;
+        exit(1);
+    }
+}
+
+//Does not check for parenthesis
+int evaluate(string e){
+    
+    signStack S;
+    signStack S1;
+    numStack N;
+    numStack N1;
+    char op;
+    int val1;
+    int val2;
+    
+    //for loop to parse arithmetic expression
+    for(int i = 0; i < e.length(); i++){
+        //is token a digit
+        if(isdigit(e[i])){
+            //check if valid arthimetic expression, must begin with a digit
+            if(!isdigit(e[0])){
+                cout << "This is an invalid arithmetic expression" << endl;
+                break;
+            }
+            //subtract 48 from char ascii value to push numerical value from 0 to 9
+            N.push(e[i]-48);
+        }
+        //check operator
+        else if(e[i] == '*'){
+            //if operator at top of signStack is "/", pop and perform operation to maintain left to right precedence
+            if(!S.isEmpty() && S.top() == '/'){
+                S.pop();
+                val1 = N.pop();
+                val2 = N.pop();
+                //push result to numStack
+                N.push(val2 / val1);
+                //push "*" to signStack
+                S.push(e[i]);
+            }
+            else{
+                //if signStack is empty, push "*" to signStack
+                S.push(e[i]);
+            }
+        }
+        else if(e[i] == '/'){
+            //if operator at top of signStack is "*", pop and perform operation to maintain left to right precedence
+            if(!S.isEmpty() && S.top() == '*'){
+                S.pop();
+                val1 = N.pop();
+                val2 = N.pop();
+                N.push(val2 * val1);
+                S.push(e[i]);
+            }
+            else{
+                S.push(e[i]);
+            }
+        }
+        else if(e[i] == '+'){
+            if(S.isEmpty()){
+                S.push(e[i]);
+            }
+            //if operator on top of stack is "*" or "/", pop sign, and top two numbers
+            //perform operation multiplication
+            else if(!S.isEmpty() && S.top() == '*'){
+                S.pop();
+                val1 = N.pop();
+                val2 = N.pop();
+                N.push(val2 * val1);
+                S.push(e[i]);
+            }
+            //if operator on top of stack is "*" or "/", pop sign, and top two numbers
+            //perform operation division
+            //***important*** first number popped is the denominator and the second is numerator
+            else if(!S.isEmpty() && S.top() == '/'){
+                S.pop();
+                val1 = N.pop();
+                val2 = N.pop();
+                N.push(val2 / val1);
+                S.push(e[i]);
+            }
+            else{
+                S.push(e[i]);
+            }
+        }
+        else if(e[i] == '-'){
+            if(S.isEmpty()){
+                S.push(e[i]);
+            }
+            else if(!S.isEmpty() && S.top() == '*'){
+                S.pop();
+                val1 = N.pop();
+                val2 = N.pop();
+                N.push(val2 * val1);
+                S.push(e[i]);
+            }
+            else if(!S.isEmpty() && S.top() == '/'){
+                S.pop();
+                val1 = N.pop();
+                val2 = N.pop();
+                N.push(val2 / val1);
+                S.push(e[i]);
+            }
+            else{
+                S.push(e[i]);
+            }
+        }
+    }
+    
+    //Stacks are reversed so that left to right rule is followed
+    while(!S.isEmpty()){
+        if(S.top() == '*'){
+            S.pop();
+            val1 = N.pop();
+            val2 = N.pop();
+            N1.push(val2 * val1);
+        }
+        else if(S.top() == '/'){
+            S.pop();
+            val1 = N.pop();
+            val2 = N.pop();
+            N1.push(val2 / val1);
+        }
+        S1.push(S.pop());
+        //cout << S1.top() << endl;
+    }
+    
+    while(!N.isEmpty()){
+        N1.push(N.pop());
+        //cout << N1.top() << endl;
+    }
+    
+    //remaining operation is additions and substractions.  Stacks are reversed and popped from left to right
+    while(!N1.isEmpty() && !S1.isEmpty()){
+        op = S1.pop();
+        val1 = N1.pop();
+        val2 = N1.pop();
+        if(op == '+'){
+            N1.push(val2 + val1);
+        }
+        else{
+            //***important***because stacks reversed to match left to right.  Unlike division or in parenthesized equations, the first popped number comes first.
+            N1.push(val1 - val2);
+            //cout << N1.top() << endl;
+        }
+    }
+    return double(N1.pop());
+}
+
+// Main file
+
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdlib>
+
+#include "infixtopostfix.hpp"
+
+using namespace std;
+
+int main(){
+    
+    string expression;
+    cout << "Enter an expression:  ";
+    getline(cin, expression);
+    cout << evaluate(expression) << endl;
+    return 0;
+    
+}
