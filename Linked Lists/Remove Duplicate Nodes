@@ -1,0 +1,141 @@
+//Find and remove duplicate values in linked list
+
+  //header file - singly.hpp
+  
+#ifndef singly_hpp
+#define singly_hpp
+
+#include <stdio.h>
+
+class list{
+
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    
+    node *head;
+    node *current;
+    
+public:
+    list();
+    void addNode(int e);
+    void deleteNode(int e);
+    void display();
+    void findAndRemove(int e);
+};
+
+#endif /* singly_hpp */
+
+  //Implementation (source) file - singly.cpp
+  
+#include <iostream>
+#include <cstdlib>
+
+#include "singly.hpp"
+
+using namespace std;
+
+list::list(){
+    head = NULL;
+    current = NULL;
+}
+
+void list::addNode(int e){
+    node *v = new node;
+    v-> next = NULL;
+    v-> value = e;
+    if(head != NULL){
+        current = head;
+        while(current-> next != NULL){
+            current = current-> next;
+        }
+        current-> next = v;
+    }
+    else{
+        head = v;
+    }
+}
+
+void list::deleteNode(int e){
+    node *deleteTemp = NULL;
+    node *temp = head;
+    current = head;
+    while(current != NULL && current-> value != e){
+        temp = current;
+        current = current-> next;
+    }
+    if(current == NULL){
+        cout << e << "was not in the list" << endl;
+        delete deleteTemp;
+        delete temp;
+    }
+    else{
+        deleteTemp = current;
+        current = current-> next;
+        temp-> next = current;
+        delete deleteTemp;
+        delete temp;
+        cout << e << "was deleted" << endl;
+    }
+}
+
+void list::display(){
+    current = head;
+    while(current != NULL){
+        cout << current-> value << endl;
+        current = current-> next;
+    }
+}
+
+void list::findAndRemove(int e){
+    node *deleteTemp = NULL;
+    current = head;
+    while(current != NULL && current-> next != NULL){
+        node *temp = current;
+        while(temp-> next != NULL)
+            if(current-> value == temp-> next-> value){
+                deleteTemp = temp-> next;
+                temp-> next = temp-> next-> next;
+                delete deleteTemp;
+            }
+            else{
+                temp = temp-> next;
+        }
+        current = current-> next;
+    }
+}
+
+  //Client (Main) file - main.cpp
+  
+#include <iostream>
+#include <cstdlib>
+
+#include "singly.hpp"
+
+using namespace std;
+
+
+
+int main() {
+    
+    list Jack;
+    
+    Jack.addNode(3);
+    Jack.addNode(6);
+    Jack.addNode(9);
+    Jack.addNode(1);
+    Jack.addNode(3);
+    Jack.addNode(6);
+    Jack.addNode(7);
+    Jack.display();
+    cout << endl;
+    
+    cout << "This is list after removing dups: " << endl;
+    
+    Jack.findAndRemove(6);
+    Jack.display();
+    
+    return 0;
+}
