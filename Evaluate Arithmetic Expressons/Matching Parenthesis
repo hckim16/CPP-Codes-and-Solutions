@@ -1,0 +1,133 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdlib>
+
+using namespace std;
+
+class Node{
+private:
+    char sign;
+    int number;
+    Node *next;
+public:
+    friend class signStack;
+    friend class numStack;
+};
+
+class signStack{
+private:
+    Node *head;
+public:
+    signStack();
+    ~signStack();
+    void push(char op);
+    char pop();
+    char top();
+    bool isEmpty();
+};
+
+signStack::signStack(){ head = NULL; }
+
+signStack::~signStack(){
+    while(!isEmpty())
+        pop();
+}
+
+bool signStack::isEmpty(){
+    return (head == NULL);
+}
+
+void signStack::push(char op){
+    Node *temp = new Node;
+    temp-> sign = op;
+    temp-> next = head;
+    head = temp;
+}
+char signStack::pop(){
+    if(!isEmpty()){
+        char op = head-> sign;
+        Node *oldtop = head;
+        head = oldtop-> next;
+        delete oldtop;
+        return op;
+    }
+    else{
+        cout << "You can't pop from an empty stack" << endl;
+        exit(1);
+    }
+}
+
+char signStack::top(){
+    if(!isEmpty()){
+        return head-> sign;
+    }
+    else{
+        cout << "The stack is empty" << endl;
+        exit(1);
+    }
+}
+
+//Check to see if same type of brackets
+bool match(char ch1, char ch2){
+    if(ch1 == '(' && ch2 == ')')
+        return true;
+    else if(ch1 == '{' && ch2 == '}')
+        return true;
+    else if(ch1 == '[' && ch2 == ']')
+        return true;
+    else
+        return false;
+}
+
+bool evaluate(string s){
+    
+    signStack S;
+    
+    for(int i = 0; i < s.length(); i++){
+        //opening brackets get pushed to stack
+        if(s[i] == '(')
+            S.push(s[i]);
+        else if(s[i] == '{')
+            S.push(s[i]);
+        else if(s[i] == '[')
+            S.push(s[i]);
+        //if stack is empty and bracket is closing type, no match, if types different no match
+        else if(s[i] == ')'){
+            if(S.isEmpty() || !match(S.top(), s[i]))
+                return false;
+            else
+            //other discard closing bracket and pop opening bracket on top of stack
+                S.pop();
+        }
+        else if(s[i] == '}'){
+            if(S.isEmpty() || !match(S.top(), s[i]))
+                return false;
+            else
+                S.pop();
+        }
+        else if(s[i] == ']'){
+            if(S.isEmpty() || !match(S.top(), s[i]))
+                return false;
+            else
+                S.pop();
+        }
+    }
+    //if stack is empty, then all brackets matched.
+    if(S.isEmpty())
+        return true;
+    else
+        return false;
+}
+    
+int main(){
+    
+    string expression;
+    cout << "Enter an expression:  ";
+    getline(cin, expression);
+    if(evaluate(expression))
+        cout << "Match" << endl;
+    else
+        cout << "No Match" << endl;
+    return 0;
+}
