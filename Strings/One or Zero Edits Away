@@ -1,0 +1,77 @@
+//Code compares two strings.  If the strings are same, then it returns true.  If the string made the same by making one edit,
+it returns true.
+
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <algorithm>
+
+using namespace std;
+
+//Checks to see if the string is the same.  It compares character by character.  Whenever a characters do not match, it 
+increments count.  Count over 1 would require more than 1 edit.  Count of zero means the strings are same and need no edits.
+
+bool sameLength(string s1, string s2){
+    int count = 0;
+    for(int i = 0; i < s1.length(); i++){
+        if(s1[i] != s2[i])
+            count++;
+    }
+    if(count > 1)
+        return false;
+    else
+        return true;
+}
+
+//Checks if smaller word can fit inside larger word.  Had trouble with this one.  Tried for loop, sorting and if statements 
+but would not work.  Finally gave up and traced the logic as written Gayle McDowell's Cracking the Coding Interview where all 
+these challengs come from.  Once I understood the logic, it was pretty straightforward.
+
+bool oneOff(string s1, string s2){
+    int i = 0;
+    int j = 0;
+    while(i < s1.length() && j < s2.length()){
+        if(s1[i] != s2[j]){
+            if(i != j)
+                return false;
+            i++;
+        }
+        else{
+            j++;
+            i++;
+        }
+    }
+    return true;
+}
+
+//First check to verify that the 2 strings are either one character off or the same length.
+
+bool oneEditAway(string s1, string s2){
+    if(s1.length() == s2.length())
+        return sameLength(s1, s2);
+    else if((s1.length() - s2.length()) == 1)
+        return oneOff(s1, s2);
+    else if((s2.length() - s1.length()) == 1)
+        return oneOff(s2, s1);
+    else
+        return false;
+}
+
+int main() {
+    
+    string str1;
+    string str2;
+    cout << "Enter first string: ";
+    cin >> str1;
+    cout << "Enter second string: ";
+    cin >> str2;
+    
+    if(oneEditAway(str1, str2))
+        cout << "True";
+    else
+        cout << "False";
+    
+    cout << endl;
+    
+    return 0;
+}
