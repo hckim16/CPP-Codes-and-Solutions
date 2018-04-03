@@ -1,0 +1,161 @@
+//Program initially adds new node to the back.
+//To check if the list is a palindrome
+//Program iterates through list and creates adds each node to the front of a new list, creating a second reverse list
+//The 2 lists are compare.  Reverse list should make original list or it returns false
+
+//Header File
+
+#ifndef list_hpp
+#define list_hpp
+
+#include <stdio.h>
+
+class list{
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    node *head;
+    node *current;
+public:
+    list();
+    ~list();
+    void addFront(int e);
+    void addBack(int e);
+    void display();
+    bool isEmpty();
+    bool compare(node *a, node *b);
+    node *getHead();
+    void remove();
+    void reverseAndCompareList();
+
+};
+
+#endif /* list_hpp */
+
+//Implementation File
+
+#include <iostream>
+#include <cstdlib>
+
+#include "list.hpp"
+
+using namespace std;
+
+list::list(){
+    head = NULL;
+    current = NULL;
+}
+
+list::~list(){
+    while(!isEmpty()){
+        remove();
+    }
+}
+
+bool list::isEmpty(){
+    return (head == NULL);
+}
+
+
+list::node *list::getHead(){
+    return head;
+}
+
+void list::remove(){
+    node *old = head;
+    head = old->next;
+    delete old;
+}
+
+void list::addFront(int v){
+    node *temp = new node;
+    temp-> value = v;
+    temp-> next = head;
+    head = temp;
+}
+
+void list::addBack(int v){
+    node *temp = new node;
+    temp-> next = NULL;
+    temp-> value = v;
+    if(head != NULL){
+        current = head;
+        while(current-> next != NULL){
+            current = current-> next;
+        }
+        current-> next = temp;
+    }
+    else{
+        head = temp;
+    }
+}
+
+void list::display(){
+    current = head;
+    while(current != NULL){
+        cout << current-> value << " ";
+        current = current-> next;
+    }
+    cout << endl;
+}
+
+void list::reverseAndCompareList(){
+    list b;  // create new list to hold reversed value
+    node *temp = head;
+    while(temp != NULL){
+        b.addFront(temp-> value); //add nodes of original list to second list back to front to reverse
+        temp = temp-> next;
+    }
+    b.display();
+    current = head;
+    node *temp1 = b.getHead();
+    if(!compare(current, temp1))
+        cout << "List is not a palidrome" << endl;
+    else
+        cout << "List is palindrome" << endl;
+}
+
+bool list::compare(node *a, node *b){ //compare two list
+    while(a != NULL){
+        if(a-> value == b-> value){
+            a = a-> next;
+            b = b-> next;
+        }
+        else{
+            return false;
+            break;
+        }
+    }
+    return a == NULL;
+}
+
+//Main File
+
+#include <iostream>
+#include <cstdlib>
+
+#include "list.hpp"
+
+using namespace std;
+
+
+int main() {
+    
+    list Jack;
+    
+    Jack.addBack(3);
+    Jack.addBack(6);
+    Jack.addBack(9);
+    Jack.addBack(1);
+    Jack.addBack(1);
+    Jack.addBack(9);
+    Jack.addBack(6);
+    Jack.addBack(3);
+    Jack.display();
+    cout << endl;
+    Jack.reverseAndCompareList();
+    
+    return 0;
+}
