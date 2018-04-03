@@ -1,0 +1,56 @@
+// Take a string and compress by replacing duplicate characters by number of duplicate characters, for example - 
+        aabbbbcccccaaa becomes a2b4c5a3
+        fffffuuuurllkhhhhqq becomes f5u4r1l2k1h4q2
+        ccccfffd####jjjjLLLL&&&&&%% becomes c4f3d1#4j4L4&5%2
+        but jjnndwiidhaadg stays jjnndwiidhaadg because this solution prints the shorter of the original string or the
+        "compressed" string.
+        abdeskfeid stays abdeskfeid, as adding a "1" after each letter would actually increase the length, not compress.
+
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <algorithm>
+
+using namespace std;
+
+//function to compress
+
+void compress(string &s){
+    //initializes empty string
+    string str = "";
+    //count starts at one to account for first letter
+    int count = 1;
+    //variable used to convert integer to char
+    int j;
+    for(int i = 0; i < s.length(); i++){
+        //checks for duplicates
+        if(s[i] == s[i+1])
+            count++;
+        else{
+            //converts integer to char ascii
+            j = count + 48;
+            //pushes to string
+            str.push_back(s[i]);
+            str.push_back(j);
+            count = 1;
+        }
+    }
+    //checks to see that altered string is in fact shorter than original string
+    if(str.length() > s.length()){
+        cout << s << endl;
+    }
+    else
+        cout << str << endl;
+}
+
+
+int main() {
+    
+    string str;
+    cout << "Enter first string: ";
+    cin >> str;
+    
+    compress(str);
+    
+    return 0;
+}
