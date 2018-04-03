@@ -1,0 +1,172 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdlib>
+
+using namespace std;
+
+class Node{
+private:
+    char sign;
+    int number;
+    Node *next;
+public:
+    friend class signStack;
+    friend class numStack;
+};
+
+class signStack{
+private:
+    Node *top;
+public:
+    signStack();
+    ~signStack();
+    void push(char op);
+    char pop();
+    bool isEmpty();
+};
+
+class numStack{
+private:
+    Node *top;
+public:
+    numStack();
+    ~numStack();
+    void push(int val);
+    int pop();
+    bool isEmpty();
+    void displayNum();
+};
+
+signStack::signStack(){ top = NULL; }
+
+numStack::numStack(){ top = NULL;}
+
+signStack::~signStack(){
+    while(!isEmpty())
+        pop();
+}
+
+numStack::~numStack(){
+    while(!isEmpty())
+        pop();
+}
+
+bool signStack::isEmpty(){
+    return (top == NULL);
+}
+
+bool numStack::isEmpty(){
+    return (top == NULL);
+}
+
+void signStack::push(char op){
+    Node *temp = new Node;
+    temp-> sign = op;
+    temp-> next = top;
+    top = temp;
+}
+
+void numStack::push(int val){
+    Node *temp = new Node;
+    temp-> number = val;
+    temp-> next = top;
+    top = temp;
+}
+
+char signStack::pop(){
+    if(!isEmpty()){
+        char op = top-> sign;
+        Node *oldtop = top;
+        top = oldtop-> next;
+        delete oldtop;
+        return op;
+    }
+    else{
+        cout << "You can't pop from an empty stack" << endl;
+        exit(1);
+    }
+}
+
+int numStack::pop(){
+    //cout << "did i begin num pop" << endl;
+    if(!isEmpty()){
+        int val = top-> number;
+        Node *temptop = top;
+        top = temptop-> next;
+        delete temptop;
+        return val;
+    }
+    else{
+        cout << "You can't pop from an empty stack" << endl;
+        exit(1);
+    }
+}
+
+/*
+void numStack::displayNum()
+{ // display operand stack content
+    Node *current = top;
+    while(current != NULL)
+    {
+        cout << current-> number << endl;
+        current = current-> next;
+    }
+    delete(current);
+}
+*/
+
+int evaluate(string e){
+    
+    signStack S;
+    numStack N;
+    char op;
+    for(int i = 0; i < e.length(); i++){
+        //first checks to see if the token is a digit
+        if(isdigit(e[i])) {
+            //if it is a digit, it pushes to number stack.  The token is in of char type
+            //substract 48 to get zero.
+            N.push(e[i]-48);
+        }
+        else{
+            if(e[i] == '(') continue;
+            //ignores right bracket
+            else if(e[i] == '+' || e[i] == '-' || e[i] == '/' || e[i] == '*'){
+                //push operator to sign stack
+                S.push(e[i]);
+            }
+            else if(e[i] == ')'){
+                //if left bracket
+                op = S.pop();
+                //assign N.pop to temp variables to ensure arithmetic done in correct order
+                int val1 = N.pop();
+                int val2 = N.pop();
+                //pop the operator on top of stack
+                if(op == '+'){
+                    //pop values and performance math and push back into number stack
+                    N.push(val2 + val1);
+                }
+                else if(op == '-'){
+                    N.push(val2 - val1);
+                }
+                else if(op == '*'){
+                    N.push(val2 * val1);
+                }
+                else if(op == '/'){
+                    N.push(val2 / val1);
+                }
+            }
+        }
+    }
+    //pop last value in number stack which should be answer
+    return N.pop();
+}
+
+int main(){
+    string expression;
+    
+    cout << "Enter an expression:  ";
+    getline(cin, expression);
+    cout << evaluate(expression) << endl;
+    return 0;
+}
