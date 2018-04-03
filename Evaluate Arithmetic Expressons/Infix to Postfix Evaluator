@@ -1,0 +1,297 @@
+Code takes (4+8)*(6-5)/((3-2)*(2+2)) and returns 48+65-*32-22+*/ and evaluates to 3
+Code takes (9+7)/((3+1)*(5-3)) and returns 97+31+53-*/ and evaluates to 2
+Code takes 3+4*5/6 and returns 345*6/+ and evaluates to 6
+
+// Header file
+
+#ifndef infixtopostfix_hpp
+#define infixtopostfix_hpp
+
+#include <stdio.h>
+
+using namespace std;
+
+class Node{
+private:
+    char sign;
+    int number;
+    Node *next;
+public:
+    friend class signStack;
+    friend class numStack;
+};
+
+class signStack{
+private:
+    Node *head;
+public:
+    signStack();
+    ~signStack();
+    void push(char op);
+    char pop();
+    char top();
+    bool isEmpty();
+};
+
+class numStack{
+private:
+    Node *head;
+public:
+    numStack();
+    ~numStack();
+    void push(int val);
+    int pop();
+    int top();
+    bool isEmpty();
+};
+
+string infixToPostfix(string &s);
+int evaluate(string &s);
+
+#endif /* infixtopostfix_hpp */
+
+// Implementation File
+
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdlib>
+
+#include "infixtopostfix.hpp"
+
+using namespace std;
+
+signStack::signStack(){ head = NULL; }
+
+numStack::numStack(){ head = NULL;}
+
+signStack::~signStack(){
+    while(!isEmpty())
+        pop();
+}
+
+numStack::~numStack(){
+    while(!isEmpty())
+        pop();
+}
+
+bool signStack::isEmpty(){
+    return (head == NULL);
+}
+
+bool numStack::isEmpty(){
+    return (head == NULL);
+}
+
+char signStack::top(){
+    if(!isEmpty()){
+        return head-> sign;
+    }
+    else{
+        cout << "The stack is empty" << endl;
+        exit(1);
+    }
+}
+
+int numStack::top(){
+    if(!isEmpty()){
+        return head-> number;
+    }
+    else{
+        cout << "The stack is empty" << endl;
+        exit(1);
+    }
+}
+
+void signStack::push(char op){
+    Node *temp = new Node;
+    temp-> sign = op;
+    temp-> next = head;
+    head = temp;
+}
+
+void numStack::push(int val){
+    Node *temp = new Node;
+    temp-> number = val;
+    temp-> next = head;
+    head = temp;
+}
+
+char signStack::pop(){
+    if(!isEmpty()){
+        char op = head-> sign;
+        Node *temp = head;
+        head = temp-> next;
+        delete temp;
+        return op;
+    }
+    else{
+        cout << "You can't pop from an empty signStack" << endl;
+        exit(1);
+    }
+}
+
+int numStack::pop(){
+    //cout << "did i begin num pop" << endl;
+    if(!isEmpty()){
+        int val = head-> number;
+        Node *temp = head;
+        head = temp-> next;
+        delete temp;
+        return val;
+    }
+    else{
+        cout << "You can't pop from an empty numStack" << endl;
+        exit(1);
+    }
+}
+
+string infixToPostfix(string &s){
+    string outPutString = "";
+    signStack S;
+    
+    //Parse expression
+    for(int i = 0; i < s.length(); i++){
+        //is token a digit, push to outPutString
+        if(isdigit(s[i]))
+            outPutString.push_back(s[i]);
+        //open parenthesis, push to sign stack
+        else if(s[i] == '('){
+            S.push(s[i]);
+            //cout << S.top() << endl;
+        }
+        //if + sign, check if sign stack empty, if empty push, if not push sign in sign stack to output string
+        //push + sign to stack
+        else if(s[i] == '+'){
+            //cout << "am i here" << endl;
+            while(!S.isEmpty() && S.top() != '('){
+                //cout << "am i in while loop 1 here" << endl;
+                outPutString.push_back(S.top());
+                S.pop();
+            }
+            S.push(s[i]);
+        }
+        //if - sign, check if sign stack empty, if empty push, if not push sign in sign stack to output string
+        //push - sign to stack
+        else if(s[i] == '-'){
+            while(!S.isEmpty() && S.top() != '('){
+                outPutString.push_back(S.top());
+                S.pop();
+            }
+            S.push(s[i]);
+        }
+        else if(s[i] == '*'){
+            //if * sign, check if sign stack empty, if empty push, if not push sign in sign stack to output string
+            //push * sign to stack
+            if(!S.isEmpty() && S.top() == '/'){
+                outPutString.push_back(S.top());
+                S.pop();
+                S.push(s[i]);
+            }
+            else{
+                S.push(s[i]);
+            }
+        }
+        else if(s[i] == '/'){
+            //if / sign, check if sign stack empty, if empty push, if not push sign in sign stack to output string
+            //push '/' sign to stack
+            if(!S.isEmpty() && S.top() == '*'){
+                outPutString.push_back(S.top());
+                S.pop();
+                S.push(s[i]);
+            }
+            else{
+                S.push(s[i]);
+            }
+        }
+        else if(s[i] == ')'){
+            //push sign at top of sign stack to output string
+            //do nothing with ')' sign
+            outPutString.push_back(S.pop());
+            //pop and discard '(' sign
+            S.pop();
+        }
+    }
+    
+    while(!S.isEmpty()){
+        //push remaining sign(s) to output String
+        outPutString.push_back(S.top());
+        S.pop();
+    }
+    
+    return outPutString;
+}
+
+int evaluate(string &s){
+    
+    numStack N;
+    int val1;
+    int val2;
+    
+    //for loop to parse arithmetic expression
+    for(int i = 0; i < s.length(); i++){
+        //is token a digit
+        if(isdigit(s[i])){
+            
+            //subtract 48 from char ascii value to push numerical value from 0 to 9
+            N.push(s[i]-48);
+            //cout << N.top() << endl;
+        }
+        
+        //check operator
+        else if(s[i] == '*'){
+            //cout << "am I checking the * sign" << endl;
+            val1 = N.pop();
+            val2 = N.pop();
+                //push result to numStack
+            N.push(val2 * val1);
+            //cout << N.top() << endl;
+        }
+        else if(s[i] == '/'){
+            //cout << "am I checking the / sign" << endl;
+            val1 = N.pop();
+            val2 = N.pop();
+            N.push(val2 / val1);
+            //cout << N.top() << endl;
+        }
+        else if(s[i] == '+'){
+            //cout << "am I checking the + sign" << endl;
+            val1 = N.pop();
+            val2 = N.pop();
+            N.push(val2 + val1);
+            //cout << N.top() << endl;
+        }
+        else if(s[i] == '-'){
+            //cout << "am I checking the - sign" << endl;
+            val1 = N.pop();
+            val2 = N.pop();
+            N.push(val2 - val1);
+            //cout << N.top() << endl;
+        }
+    }
+    return double(N.pop());
+}
+
+// Main file
+
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <cstdlib>
+
+#include "infixtopostfix.hpp"
+
+using namespace std;
+
+int main(){
+    
+    string expression;
+    cout << "Enter an expression:  ";
+    getline(cin, expression);
+    cout << infixToPostfix(expression) << endl;
+    string postexp = infixToPostfix(expression);
+    cout << postexp << endl;
+    cout << evaluate(postexp) << endl;
+    return 0;
+    
+}
