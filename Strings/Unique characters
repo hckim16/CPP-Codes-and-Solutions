@@ -1,0 +1,32 @@
+//Determine if a string has all unique characters.
+
+#include <string>
+
+using namespace std;
+
+bool checkUnique(string str){
+    for (int i = 0; i < str.length(); i++){
+        for(int j = i+1; j < str.length(); j++){
+            if(str[i] == str[j]){
+                return false;
+                break;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    
+    string str;
+    
+    cout << "Enter string: ";
+    getline(cin, str);
+    
+    if(checkUnique(str))
+        cout << "string is unique" << endl;
+    else
+        cout << "string is not unique" << endl;
+    
+    return 0;
+}
