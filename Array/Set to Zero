@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+//Set entire row to zero
+void setToRowZero(vector<vector<int>> &v, int row, int n){ //pass by reference to change vector variables
+    for(int j = 0; j < n; j++){
+        v[row][j] = 0;
+    }
+}
+
+//Set entire column to zero
+void setToColZero(vector<vector<int>> &v, int col, int n){ //pass by reference to change vector variables
+    for(int i = 0; i < n; i++){
+        v[i][col] = 0;
+    }
+}
+
+void zeroMatrix(vector<vector<int>> &v, int n){ //pass by reference to change vector variables
+    
+    bool row = false; //set bool to change 1st row to zero at end if zero in 1st row
+    bool col = false; //set bool to change 1st column to zero at end if zero in 1st column
+    for(int j = 0; j < n; j++){ //check if zero in first row, if yes set bool to true
+        if(v[0][j] == 0){       //as 1st row will be overwritten
+            row = true;
+            break;
+        }
+    }
+    
+    for(int i = 0; i < n; i++){ //check if zero in first column, if yes set bool to true
+        if(v[i][0] == 0){       //as 1st column will be overwritten
+            col = true;
+            break;
+        }
+    }
+    
+    for(int i = 1; i < n; i++){ //check for zero starting at [1][1], if zero change first number in column or row to zero
+        for(int j = 1; j < n; j++){
+            if(v[i][j] == 0){
+                v[i][0] = 0;
+                v[0][j] = 0;
+            }
+        }
+    }
+
+    for(int i = 1; i < n; i++){ //check for zero in 1st column
+        if(v[i][0] == 0)
+            setToRowZero(v, i, n); //if zero found in column, call function to change all numbers in row to zero
+    }
+    
+    for(int j = 1; j < n; j++){ //check for zero in 1st row
+        if(v[0][j] == 0)
+            setToColZero(v, j, n);  //if zero found in row, call funcdtion to change all number in column to zero
+    }
+
+    if(row)
+        setToRowZero(v, 0, n); //if original row had zero, call function to change all numbers in row to zero
+    
+    if(col)
+        setToColZero(v, 0, n);  //if origina column had zero, call function to change all numbers in row to zero
+}
+
+int main(){
+    
+    
+    int n;
+    cout << "Enter size of matrix: ";
+    cin >> n;
+    
+    int a;
+    vector<vector<int>> vec;
+    
+    for(int i = 0; i < n; i++){
+        vector<int>row;
+        for(int j = 0; j < n; j++){
+            cout << "Enter number: ";
+            cin >> a;
+            row.push_back(a);
+        }
+        vec.push_back(row);
+     }
+    
+    cout << "Before zeroing: " << endl;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            cout << vec[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+    
+    zeroMatrix(vec, n);
+    
+    cout << "After zeroing: " << endl;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            cout << vec[i][j] << " ";
+        }
+        cout << endl;
+    }
+    
+    
+    return 0;
+}
