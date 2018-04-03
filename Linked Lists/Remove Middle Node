@@ -1,0 +1,128 @@
+// header file
+
+#ifndef singly_hpp
+#define singly_hpp
+
+#include <stdio.h>
+
+class list{
+
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    
+    node *head;
+    node *current;
+    
+public:
+    list();
+    void addNode(int e);
+    void deleteNode(int n);
+    void display();
+};
+
+#endif /* singly_hpp */
+
+// implementation file
+
+#include <iostream>
+#include <cstdlib>
+
+#include "singly.hpp"
+
+using namespace std;
+
+list::list(){
+    head = NULL;
+    current = NULL;
+}
+
+void list::addNode(int e){
+    node *v = new node;
+    v-> next = NULL;
+    v-> value = e;
+    if(head != NULL){
+        current = head;
+        while(current-> next != NULL){
+            current = current-> next;
+        }
+        current-> next = v;
+    }
+    else{
+        head = v;
+    }
+}
+
+/*
+  The assumptions:
+    1. Given node to remove, that is remove node number 4, as an example
+    2. Iterate through singly linked list to find node.
+    3. Once node found, set a temp node to current node's next node.
+    4. copy temp value to current node value
+    5. Set current next to temp next
+    6. Delete temp.
+    7. Not actually deleting the targeted node.  Rather copying the info from targeted node's next into target node.
+        then deleting targeted node's next.  
+    8. Cannot delete last node, as there is no next node to copy from.
+
+void list::deleteNode(int n){
+    node *temp = NULL;
+    current = head;
+    if(current == NULL){
+        cout << "The list is empty" << endl;
+    }
+    else{
+        for(int i = 0; i < n; i++){
+            current = current-> next;
+        }
+    }
+    if(current-> next != NULL){
+        temp = current-> next;
+        current-> value = temp-> value;
+        current-> next = temp-> next;
+        delete temp;
+    }
+    else{
+        cout << "Cannot delete last node" << endl;
+    }
+}
+
+void list::display(){
+    current = head;
+    while(current != NULL){
+        cout << current-> value << endl;
+        current = current-> next;
+    }
+}
+
+// main file
+
+#include <iostream>
+#include <cstdlib>
+
+#include "singly.hpp"
+
+using namespace std;
+
+
+int main() {
+    
+    list Jack;
+    
+    Jack.addNode(3);
+    Jack.addNode(6);
+    Jack.addNode(9);
+    Jack.addNode(1);
+    Jack.addNode(3);
+    Jack.addNode(6);
+    Jack.addNode(7);
+    Jack.display();
+    cout << endl;
+    
+    Jack.deleteNode(6);
+    Jack.display();
+    
+    return 0;
+}
