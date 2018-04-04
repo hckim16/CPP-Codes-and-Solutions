@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> rotateLeft(vector<int>array, int r){
+    rotate(array.begin(), array.begin()+r, array.end());
+    return array;
+}
+
+int main(){
+    
+    int n;
+    int r;
+    
+    cout << "Enter number of integers in array: ";
+    cin >> n;
+    cout << endl;
+    cout << "Enter number of rotations to left: ";
+    cin >> r;
+    cout << endl;
+    
+    vector<int> originalArray(n);
+    for(int i = 0; i < n; i++){
+        cout << "Enter integer: ";
+        cin >> arr[i];
+    }
+
+    for(int i = 0; i < n; i++){
+        cout << originalArray[i] << " ";
+    }
+    cout << endl;
+    
+    vector<int> newArray = rotateLeft(originalArray, r);
+    for(int i = 0; i < n; i++){
+        cout << newArray[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
