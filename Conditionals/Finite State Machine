@@ -1,0 +1,70 @@
+/*
+ This program that models a finite state automaton assigns conditions 0 to 4 that models state zero to state 4.  
+ It only considers 0 and 1 as input.  It only moves from state to state based on the input of 1101. Any other combinatin, 
+ be it 1 and 0 or any other input will not move the state from zero to four.  
+ I had considered using enum values to assign "words to integers" but decided to stay with integers for simplicity sake.
+ */
+
+#include<iostream>
+
+using namespace std;
+
+int main()
+{
+    const int SIZE = 25;
+    char e[SIZE];
+    int condition;
+    char again;
+    
+    do
+    {
+        cout << "Please enter a string of 1 and 0: ";
+        cin >> e;                                   //Program will only consider 1 and 0.
+        condition = 0;
+
+        for(int i = 0; i <  SIZE; i++)
+        {
+            if(e[i] == '1')
+            {
+                if(condition == 0)                  //If state zero, input one moves to state one
+                {
+                    condition = 1;
+                }
+                else if(condition == 1)             //If state one, input one moves to state two
+                {
+                    condition = 2;
+                }
+                else if(condition == 3)             //If state three, input one moves to state four
+                {
+                    condition = 4;
+                    cout << "String is accepted\n"; //at state four, string is accepted and program terminates
+                    break;
+                }
+            }
+            else
+            {
+                if(condition == 0)                  //If state zero, input zero keeps at state zero
+                {
+                    condition = 0;
+                }
+                else if(condition == 1)             //If state one, input zero moves to state zero
+                {
+                    condition = 0;
+                }
+                else if(condition == 2)             //If state two, input zero moves to state three
+                {
+                    condition = 3;
+                }
+                else if(condition == 3)             //If state three, input zero moves to state zero
+                {
+                    condition = 0;
+                }
+            }
+        }
+        cout << endl;
+        cout << "Would you like to enter another string: ";
+        cin >> again;
+    }while(again == 'y' || again == 'Y');
+    
+    return 0;
+}
