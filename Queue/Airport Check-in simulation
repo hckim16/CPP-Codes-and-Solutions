@@ -1,0 +1,358 @@
+//Hyo Chang Kim
+//Kim-CS610-2017-programming assignment 1
+//Professor Ali Mili
+/*
+Input:
+1.  Duration of Simulation
+2.  Average Coach Class Passenger Arrival Time
+3.  Average Coach Class Service Time
+4.  Average First Class Passenger Arrival Time
+5.  Average First Class Service Time
+
+Processing:
+1.  Create Queue
+2.  Use conditional statements to:
+    1.  Enqueue Passengers
+    2.  Dequeue Passengers based on service time and arrival time
+4.  Calculate Output
+
+Output:
+1.  Total Simulation time
+2.  Maximum length of Queue
+3.  Maximum wait time
+4.  Maximum average time
+5.  Rate of Occupancy per station
+*/
+
+
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+class Cnode
+{
+    int value;                              //integer value representing passenger
+    Cnode *next;                            //hold pointer address to next node in the list
+    friend class Clist;                     //provide access to this class by Clist
+    friend class Queue;                     //provide access to this class by Queue
+};
+
+class Clist
+{
+public:
+    Clist();                                //constructor
+    ~Clist();                               //destructor
+    bool empty() const;                     //check empty
+    const int& front() const;               //returns node referenced by the cursor
+    const int& back() const;                //returns cursor
+    void advance();                         //advances cursor to next node on the list
+    void add(const int& e);                 //inserts new node at "e" and makes it the cursor
+    void remove();                          //removes the front node (immediately after the cursor).
+private:
+    Cnode *cursor;                          //hold pointer address to cursor node
+    friend class Queue;                     //provide access to this class by Queue
+};
+
+class Queue
+{
+public:
+    Queue();                                //constructor - no destructor (use destructor from CList class)
+    bool empty() const;                     //check empty
+    const int& front() const;               //returns node referenced by the cursor
+    void enqueue(const int& e);             //inserts at end; becomes new cursor
+    void dequeue();                         //removes from front
+    void display();                         //show progression of enq/deq;show content
+    void showFront();                       //show first top
+    int count();                            //show number of elements in queue
+private:
+    Clist C;
+    int n;
+    
+};
+
+Clist::Clist()                              //constructor
+{
+    cursor = NULL;
+}
+
+Clist::~Clist()                             //destructor
+{ while(!empty()) remove(); }
+
+Queue::Queue()                              //constructor
+: C(), n(0) {}
+
+bool Clist::empty() const                   //check empty
+{
+    if(cursor == NULL)
+        return true;
+    else
+        return false;
+}
+
+bool Queue::empty() const                   //check empty
+{ return n == 0; }
+
+const int& Queue::front() const             //returns front node or empty
+{
+    if (empty())
+        cout << "Queue is empty\n";
+    return C.front();
+}
+
+const int& Clist::front() const             //returns front node or empty
+{
+    if(empty())
+        cout << "Queue is empty\n";
+    return cursor-> next-> value;
+}
+
+const int& Clist::back() const              //returns cursor or empty
+{
+    if(empty())
+        cout << "Queue is empty\n";
+    return cursor-> value;
+}
+
+void Clist::advance()                       //advances cursor to next node on list
+{
+    if(empty())
+        cout << "Queue is empty\n";
+    cursor = cursor-> next;
+}
+
+int main()
+{
+    Queue FC;                               //create First Class queue
+    Queue CC;                               //create Coach Class queue
+    
+    double durationOfCheckIn;               //initialize input variables
+    double CCAverageArrivalTime;
+    double CCAverageServiceTime;
+    double FCAverageArrivalTime;
+    double FCAverageServiceTime;
+    
+    cout << "Please enter following parameters to begin simulation " << endl;  //get input variables
+    cout << endl;
+    cout << "Duration of check-in (in whole minutes): " << endl;
+    cin >> durationOfCheckIn;
+    cout << "Average arrival time interval for coach class passengers (in whole minutes): " << endl;
+    cin >> CCAverageArrivalTime;
+    cout << "Average time each passenger spends at coach class service station (in whole minutes): " << endl;
+    cin >> CCAverageServiceTime;
+    cout << "Average arrival time interval for first class passengers (in whole minutes): " << endl;
+    cin >> FCAverageArrivalTime;
+    cout << "Average time each passenger spends at first class service station (in whole minutes): " << endl;
+    cin >> FCAverageServiceTime;
+    
+    double FCSS1 = 0;                       //initialize counter/output variables
+    double FCSS2 = 0;
+    double FCC1 = 0;
+    double FCC2 = 0;
+    int t = 0;
+    int i = 0;
+    while(t < durationOfCheckIn)
+    {
+        if(i == FCAverageArrivalTime)       //loop enqueues passengers to queue
+        {
+            FC.enqueue(1);
+            i = 0;
+        }
+        if(FCSS1 == 0)                      //checks if counter is open
+        {
+            FC.dequeue();
+            FCSS1 = FCAverageServiceTime;
+            FCC1++;                         //increments and keeps track of customers served
+        }
+        else if(FCSS2 == 0)
+        {
+            FC.dequeue();
+            FCSS2 = FCAverageServiceTime;
+            FCC2++;
+        }
+        else
+        {
+            FCSS1--;                        //decrements service time for customer at counter
+            FCSS2--;
+        }
+        t++;                                //increments time from opening of check-in counter
+        i++;                                //increments time between passenger arrival
+    }
+    
+    double CCSS1 = 0;                       //initialize variables
+    double CCSS2 = 0;
+    double CCSS3 = 0;
+    double CCC1 = 0;
+    double CCC2 = 0;
+    double CCC3 = 0;
+    int u = 0;
+    int v = 0;
+    while(u < durationOfCheckIn)
+    {
+        if(v == CCAverageArrivalTime)       //loop enqueues passengers to queue
+        {
+            CC.enqueue(2);
+            v = 0;
+        }
+        if(CCSS1 == 0)                      //checks if counter is open
+        {
+            CC.dequeue();
+            CCSS1 = CCAverageServiceTime;
+            CCC1++;                         //increments and keeps track of customers served
+        }
+        else if(CCSS2 == 0)
+        {
+            CC.dequeue();
+            CCSS2 = CCAverageServiceTime;
+            CCC2++;
+        }
+        else if(CCSS3 == 0)
+        {
+            CC.dequeue();
+            CCSS3 = CCAverageServiceTime;
+            CCC3++;
+        }
+        else
+        {
+            CCSS3 --;                       //decrements service time for customer at counter
+            CCSS2 --;
+            CCSS1 --;
+        }
+        u++;                                //increments time from opening of check-in counter
+        v++;                                //increments time between passenger arrival
+    }
+    
+    double FCsimTotal;                      //begin output variables
+    FCsimTotal = (FCC1 + FCC2 + FC.count())*FCAverageServiceTime;
+    cout << "Total Simulation Time for First Class is: " << FCsimTotal << " minutes" << endl;
+    double CCsimTotal;
+    CCsimTotal = (CCC1 + CCC2 + CCC3 + CC.count())*CCAverageServiceTime;
+    cout << "Total Simulation Time for Coach Class is: " << CCsimTotal << " minutes" << endl;
+    cout << endl;
+    
+    cout << "Passengers serviced at First Class Service Station #1: " << FCC1 << endl;
+    cout << "Passengers serviced at First Class Service Station #2: " << FCC2 << endl;
+    cout << "Passengers serviced at Coach Class Service Station #1: " << CCC1 << endl;
+    cout << "Passengers serviced at Coach Class Service Station #2: " << CCC2 << endl;
+    cout << "Passengers serviced at Coach Class Service Station #3: " << CCC3 << endl;
+    cout << endl;
+    cout << "Maximum length of queue for First Class: " << FC.count() << endl;
+    cout << "Maximum length of queue for Coach Class: " << CC.count() << endl;
+    cout << endl;
+    cout << setprecision(2) << fixed << showpoint;
+    cout << "Average waiting time for First Class is " << (FC.count()/FCAverageServiceTime) << " minutes" <<endl;
+    cout << "Average waiting time for Coach Class is " << (CC.count()/CCAverageServiceTime) << " minutes" <<endl;
+    cout << endl;
+    cout << "Maximum waiting time for First Class is " << (FC.count()*FCAverageServiceTime/2) << " minutes" << endl;
+    cout << "Maximum waiting time for Coach Class is " << (CC.count()*CCAverageServiceTime/3) << " minutes" <<endl;
+    cout << endl;
+    double rateFCSS1 = ((FCC1*FCAverageServiceTime)/durationOfCheckIn)*100;
+    cout << "Rate of occupancy for FC station 1 is " << rateFCSS1 << "%" << endl;
+    double rateFCSS2 = ((FCC2*FCAverageServiceTime)/durationOfCheckIn)*100;
+    cout << "Rate of occupancy for FC station 2 is " << rateFCSS2 << "%" << endl;
+    cout << endl;
+    double rateCCSS1 = ((CCC1*CCAverageServiceTime)/durationOfCheckIn)*100;
+    cout << "Rate of occupancy for CC station 1 is " << rateCCSS1 << "%" << endl;
+    double rateCCSS2 = ((CCC2*CCAverageServiceTime)/durationOfCheckIn)*100;
+    cout << "Rate of occupancy for CC station 2 is " << rateCCSS2 << "%" << endl;
+    double rateCCSS3 = ((CCC3*CCAverageServiceTime)/durationOfCheckIn)*100;
+    cout << "Rate of occupancy for CC station 3 is " << rateCCSS3 << "%" << endl;
+    cout << endl;
+    
+    return 0;
+}
+
+void Clist::add(const int& e)               //insert node
+{
+    Cnode *v = new Cnode;
+    v-> value = e;
+    v-> next = NULL;
+    if(cursor == NULL)
+    {
+        v-> next = v;
+        cursor = v;
+    }
+    else
+    {
+        v-> next = cursor-> next;
+        cursor-> next = v;
+    }
+}
+
+void Queue::enqueue(const int& e)           //insert node at back
+{
+    C.add(e);
+    C.advance();
+    n++;
+}
+
+void Clist::remove()                        //remove node
+{
+    Cnode *old = cursor-> next;
+    if(old == cursor)
+    {
+        cursor = NULL;
+    }
+    else
+    {
+        cursor-> next = old-> next;
+    }
+    delete old;
+}
+
+void Queue::dequeue()                       //remove node from front.
+{
+    if(empty())
+    {
+        //cout << "Queue is empty\n";
+        return;
+    }
+    C.remove();
+    n--;
+}
+
+void Queue::display()                       //display content of queue
+{
+    if(empty())
+    {
+        cout << "Queue is empty\n";
+    }
+    else
+    {
+        int j = 0;
+        Cnode* temp = C.cursor-> next;
+        for(int i = 1; i <= this-> count(); i++)
+        {
+            //cout << temp-> value << " " << endl;
+            j++;
+            temp = temp-> next;
+        }
+        cout << "number in queue: " << j << endl;
+    }
+}
+
+int Queue::count()                          //display size of queue
+{
+    Cnode *v;
+    v = C.cursor;
+    int c = 0;
+    if(C.cursor == NULL)
+        return 0;
+    else
+        c++;
+    while(v-> next != C.cursor)
+    {
+        c++;
+        v = v-> next;
+    }
+    return c;
+}
+
+void Queue::showFront()                     //show top
+{
+    if(empty())
+        cout << "Queue is empty\n";
+    else
+        cout << "Number at front is: " << C.cursor-> next-> value;
+}
