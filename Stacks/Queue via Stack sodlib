@@ -1,0 +1,63 @@
+//this code uses the stack template from standard library
+//code is obviously far simpler and cleaner
+//because templates in stdlib are built for optimal performance, in general, this will have a more efficient run time
+//as rule though, a good practice to build stack class before using templates in stdlib
+
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void myQueue(stack <int> s){
+    
+    stack<int> s1;
+    while(!s.empty()){
+        s1.push(s.top());
+        s.pop();
+    }
+    cout << "Stack behaving like queue to dequeue in FIFO order: " << endl;
+    while(!s1.empty()){
+        cout << s1.top() << "->";
+        s1.pop();
+    }
+}
+
+void display(stack <int> s){
+    cout << "Stack contains: " << endl;
+    while(!s.empty()){
+        cout << s.top() << "->";
+        s.pop();
+    }
+    
+}
+
+int main(){
+    stack <int> S;
+    
+    S.push(65);
+    S.push(12);
+    S.push(99);
+    S.push(4);
+    S.push(20);
+    S.push(11);
+    S.push(8);
+    S.push(1);
+    cout << endl;
+    myQueue(S);
+    cout << endl;
+    
+    return 0;
+}
+
+/*
+******Output***********
+
+Stack contains: 
+1->8->11->20->4->99->12->65->23->
+Stack behaving like queue to dequeue in FIFO order: 
+23->65->12->99->4->20->11->8->1->
+Program ended with exit code: 0
+
+***********************
+
+*/
