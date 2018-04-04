@@ -1,0 +1,136 @@
+//This was a little tricky
+//I built my own stack instead using std library
+//My original getMin() function kept throwing exception.  Comparing temp-> value to temp-> next-> value was not making
+//my compiler happy.
+//Did some research and read a suggestion about checking for min while adding.
+//And that did it.  
+//Set a global min variable
+//If stack is empty, push initial value and set that value to min
+//On subsequent pushes, first check if push value is less than min, if so, set that value to min
+//Otherwise, push per normal.
+//For the getMin(), just return the global min value which should be lowest value and in constant O(1).
+
+// Header file
+
+#ifndef Stack_hpp
+#define Stack_hpp
+
+#include <stdio.h>
+
+class stack{
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    node *top;
+    
+public:
+    int min;
+    stack();
+    ~stack();
+    bool isEmpty();
+    int pop();
+    void push(int v);
+    int getMin();
+    void display();
+};
+
+#endif /* Stack_hpp */
+
+//Implementation File
+
+#include "Stack.hpp"
+#include <iostream>
+
+using namespace std;
+
+stack::stack(){
+    top = NULL;
+}
+
+stack::~stack(){
+    while(!isEmpty()){
+        pop();
+    }
+}
+
+bool stack::isEmpty(){
+    return (top == NULL);
+}
+
+void stack::push(int v){
+    node *temp = new node;
+    if(top == NULL){
+        temp-> value = v;
+        temp-> next = top;
+        top = temp;
+    }
+    else{
+        if(v < top-> value){        //Check if incoming value is less than top value in stack
+            min = v;                //If it is, set to min
+            temp-> value = v;
+            temp-> next = top;
+            top = temp;
+        }
+        else{
+            temp-> value = v;
+            temp-> next = top;
+            top = temp;
+        }
+    }
+}
+
+int stack::pop(){
+    if(!isEmpty()){
+        int val = top-> value;
+        node *temp = top;
+        top = temp-> next;
+        delete temp;
+        return val;
+    }
+    else{
+        cout << "You can't pop from an empty stack!" << endl;
+        exit(1);
+    }
+}
+
+int stack::getMin(){
+    return min;
+}
+
+void stack::display(){
+    node *temp = top;
+    while(temp != NULL){
+        cout << temp-> value << " ";
+        temp = temp-> next;
+    }
+    delete temp;
+}
+
+//Main File
+
+#include "Stack.hpp"
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    
+    stack S;
+    
+    S.push(6);
+    S.push(2);
+    S.push(5);
+    S.push(12);
+    S.push(7);
+    S.push(9);
+    S.push(1);
+    S.push(19);
+    S.push(32);
+    S.display();
+    cout << endl;
+    cout << "Minimum value is " << S.getMin() << endl;
+    
+    return 0;
+}
