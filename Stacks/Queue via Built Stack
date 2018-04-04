@@ -1,0 +1,135 @@
+//uses two stacks to pop in FIFO over
+//values are pushed to one stack
+//from first stack, values pop and push in order to stack, which reverses order (see is list palindrome code in linked list folder)
+//once stack is in reverse order in 2md stack
+//pop from 2nd stack
+//values come out in order first pushed into first stack, comes out FIFO as a queue behavior
+
+// header file
+
+#ifndef StackQueue_hpp
+#define StackQueue_hpp
+
+#include <stdio.h>
+
+class stack{
+private:
+    struct node{
+        int value;
+        node *next;
+    };
+    node *top;
+public:
+    stack();
+    ~stack();
+    bool isEmpty();
+    void push(int v);
+    int pop();
+    void display();
+    void myQueue();
+};
+
+#endif /* StackQueue_hpp */
+
+//implementation
+
+#include "StackQueue.hpp"
+#include <iostream>
+
+using namespace std;
+
+stack::stack(){
+    top = NULL;
+}
+
+stack::~stack(){
+    while(!isEmpty()){
+        pop();
+    }
+}
+
+bool stack::isEmpty(){
+    return (top == NULL);
+}
+
+void stack::push(int v){
+    node *temp = new node;
+    temp-> value = v;
+    temp-> next = top;
+    top = temp;
+}
+
+int stack::pop(){
+    if(!isEmpty()){
+        int val = top-> value;
+        node *temp = top;
+        top = temp-> next;
+        delete temp;
+        return val;
+    }
+    else{
+        cout << "You can't pop from an empty stack!" << endl;
+        exit(1);
+    }
+}
+
+void stack::display(){
+    node *temp = top;
+    while(temp != NULL){
+        cout << temp-> value<< "->";
+        temp = temp-> next;
+    }
+    delete temp;
+}
+
+void stack::myQueue(){          
+    stack S1;
+    while(!isEmpty()){
+        S1.push(pop());               //pop from 1st stack and push to 2nd stack until stack is empty
+    }
+    while(!S1.isEmpty()){
+        cout << S1.pop() << "->";
+    }
+}
+
+//Main file
+
+#include "StackQueue.hpp"
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    stack S;
+    
+    S.push(6);
+    S.push(2);
+    S.push(5);
+    S.push(12);
+    S.push(7);
+    S.push(9);
+    S.push(1);
+    S.push(19);
+    S.push(32);
+    cout << "What is in the top from top to bottom: " << endl;
+    S.display();
+    cout << endl;
+    cout << "Popping from stack as queue FIFO: " << endl;
+    S.myQueue();
+    cout << endl;
+    
+    return 0;
+}
+
+/*
+******Output***********
+
+What is in stack from top to bottom: 
+32->19->1->9->7->12->5->2->6->
+Popping from stack as queue FIFO: 
+6->2->5->12->7->9->1->19->32->
+Program ended with exit code: 0
+
+***********************
+
+*/
