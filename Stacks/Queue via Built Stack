@@ -111,10 +111,10 @@ int main() {
     S.push(1);
     S.push(19);
     S.push(32);
-    cout << "What is in the top from top to bottom: " << endl;
+    cout << "Stack contains: " << endl;
     S.display();
     cout << endl;
-    cout << "Popping from stack as queue FIFO: " << endl;
+    cout << "Stack behaving like queue to dequeue in FIFO order: " << endl;
     S.myQueue();
     cout << endl;
     
