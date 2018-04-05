@@ -37,6 +37,6 @@ int main(){
         cout << newArray[i] << " ";
     }
     cout << endl;
-
+ 
     return 0;
 }
