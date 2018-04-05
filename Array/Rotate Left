@@ -4,8 +4,8 @@
 
 using namespace std;
 
-vector<int> rotateLeft(vector<int>array, int r){
-    rotate(array.begin(), array.begin()+r, array.end());
+vector<int> rotateLeft(vector<int>array, int r){                //rotate function from <algorithm>
+    rotate(array.begin(), array.begin()+r, array.end());        //<vector> iteration
     return array;
 }
 
