@@ -1,0 +1,50 @@
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int findMaxHourGlass(int arr[][6], int n){
+//int findMaxHourGlass(vector< vector<int> > arr, int n){ 
+    
+    int sum = 0;
+    
+    for (int i = 0; i < n-2; i++){
+        for(int j = 0; j < n-2; j++){
+            sum=max(sum,
+                        arr[i][j]       + arr[i][j+1]       + arr[i][j+2]
+                                        + arr[i+1][j+1]
+                        + arr[i+2][j]   + arr[i+2][j+1]     + arr[i+2][j+2]);
+        }
+    }
+    
+    return sum;
+}
+
+int main(){
+    
+    int matrix[][6] = {
+        {1,2,4,2,6,9},
+        {0,2,4,0,6,10},
+        {3,8,12,5,34,76},
+        {9,6,0,34,56,7},
+        {1,3,5,2,7,4},
+        {0,8,1,1,1,1,}
+    };
+    
+    /*
+    int n;
+     
+    vector< vector<int> > matrix(n,vector<int>(n));
+    for(int i = 0; i < 6; i++){
+        for(int j = 0; j < 6; j++){
+            cin >> arr[i][j];
+        }
+    }
+    
+    cout << findMaxHourGlass(matrix, 6) << endl;
+    */
+    
+    cout << findMaxHourGlass(matrix, 6) << endl;
+    return 0;
+}
