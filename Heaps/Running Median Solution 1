@@ -1,0 +1,80 @@
+// Find running median
+// Adapted and represented in C++ following the logic from Gayle Mcdowell presentation on solving this challenge using Java
+// Uses queue library to build to heaps - max heap and min heap
+// function inserts an integer to either one of the heaps (line 31)
+// then balances the two heaps to ensure that the size is no more than one off (line 37)
+// finds the running median by returning the value of the greater heap (line 59 or line 62)
+// or returns the average of the top values in the two heaps (line 56)
+
+#include <cmath>
+#include <queue>
+#include <iomanip>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+class runningMedian{
+private:
+    priority_queue<int> lower;
+    priority_queue<int, vector<int>, greater<int>> higher;
+
+    double median;
+    void rebalance();
+public:
+    void insertNumber(int &);
+    double getmedian();
+};
+
+void runningMedian::insertNumber(int &num){
+    if(lower.empty() || num < lower.top()){
+        lower.push(num);
+    }
+    else{
+        higher.push(num);
+    }
+    rebalance();
+}
+
+void runningMedian::rebalance(){
+    if((lower.size() - higher.size()) > 1 || (higher.size() - lower.size()) > 1){
+        if(lower.size() > higher.size()){
+            higher.push(lower.top());
+            lower.pop();
+        }
+        else if (lower.size() < higher.size()){
+            lower.push(higher.top());
+            higher.pop();
+        }
+    }
+}
+
+double runningMedian::getmedian(){
+    double median;
+    if(lower.size() == higher.size()){
+        median = (double(lower.top() + higher.top())) / 2;
+    }
+    else if(lower.size() > higher.size()){
+        median = lower.top();
+    }
+    else{
+        median = higher.top();
+    }
+    return median;
+}
+
+int main(){
+    
+    runningMedian med;
+    int n;
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        int num;
+        cin >> num;
+        med.insertNumber(num);
+        cout << setprecision(1) << fixed << med.getmedian() << endl;
+    }
+    return 0;
+}
