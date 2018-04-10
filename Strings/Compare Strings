@@ -1,0 +1,26 @@
+//Short program to how "compare" string function
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void checkPassword(string s){
+    string secret = "Use a fri#$Ggin halfway strfa)&g password";
+    
+    if(secret.compare(s) == 0)
+        cout << "Access granted" << endl;
+    else
+        cout << "Sorry";
+}
+
+int main(void) {
+    
+    string password;
+    cout << "Enter password: ";
+    getline(cin,password);
+    checkPassword(password);
+    cout << endl;
+    return 0;
+}
