@@ -1,0 +1,102 @@
+// Header File
+
+#ifndef tree_hpp
+#define tree_hpp
+
+#include <stdio.h>
+
+struct node{
+    int value;
+    node *left;
+    node *right;
+};
+
+class bstree{
+private:
+    node *root;
+public:
+    bstree();
+    ~bstree();
+    void empty();
+    void empty(node *n);
+    node *createRoot(int v);
+    node *insert(node *n, int v);
+    int checkHeight(node *n);
+};
+
+#endif /* tree_hpp */
+
+// Implementation File
+
+#include "tree.hpp"
+#include <iostream>
+
+using namespace std;
+
+bstree::bstree(){                                         // constructor - creates empty tree
+    root = NULL;
+}
+
+bstree::~bstree(){
+    empty();                                              // destructor
+}
+
+void bstree::empty(){
+    empty(root);                                          // initialize the empty function                       
+}
+
+void bstree::empty(node *n){                              // recursively destroys tree
+    if(n != NULL){
+        empty(n-> left);
+        empty(n-> right);
+        delete n;
+    }
+}
+
+node *bstree::createRoot(int v){                          // creates root node at each level
+    node *u = new node;
+    u-> value = v;
+    u-> left = u-> right = NULL;
+    return u;
+}
+
+node *bstree::insert(node *root, int v){
+    if(root == NULL)                                      // creates parent node
+        root = createRoot(v);
+    else if(v <= root-> value)
+        root-> left = insert(root-> left, v);             // recursively creates left node
+    else
+        root-> right = insert(root-> right, v);           // recursiveley creates right node
+    return root;
+}
+
+int bstree::checkHeight(node *n){
+    if(n == NULL){
+        return 0;
+    }
+    else{
+        int left = checkHeight(n-> left);                 // recursively returns height of tree
+        int right = checkHeight(n-> right);
+        return 1 + max(left, right);
+    }
+}
+
+// Main File
+
+#include "tree.hpp"
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    bstree A;
+    int arr[12] = {30,5,36,8,31,13,42,23,45,22,51,26};
+    node *root = A.createRoot(arr[0]);
+    cout << "what is root " << root-> value << endl;
+    for(int i = 1; i < 12; i++){
+        A.insert(root, arr[i]);
+    }
+    cout << "The height of tree is " << A.checkHeight(root) << endl;
+    
+    return 0;
+}
