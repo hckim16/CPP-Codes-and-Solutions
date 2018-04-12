@@ -21,7 +21,7 @@ public:
     void empty();
     void empty(node *n);
     node *createRoot(int v);
-    node *createTree(std::vector<int> arr, int start, int end);
+    node *createTree(int arr[], int start, int end);
     node *insert(node *n, int v);
     int checkHeight(node *n);
     void preorder(node *n);
@@ -66,7 +66,7 @@ node *bstree::createRoot(int v){
     return u;
 }
 
-node *bstree::createTree(vector<int> arr, int start, int end){
+node *bstree::createTree(int arr[], int start, int end){
     
     if(start > end)
         return NULL;
@@ -123,7 +123,7 @@ using namespace std;
 
 int main() {
     bstree A;
-    vector<int> arr = {1,2,5,8,12,17,24,26,29,30,34,35,36,39,42,48,51};
+    int arr[] = {1,2,5,8,12,17,24,26,29,30,34,35,36,39,42,48,51};
     //int n = sizeof(arr)/sizeof(arr[0]);
     node *root = A.createTree(arr, 0, 16);
     cout << "Preorder: ";
