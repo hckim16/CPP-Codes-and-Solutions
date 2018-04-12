@@ -126,13 +126,25 @@ int main() {
     vector<int> arr = {1,2,5,8,12,17,24,26,29,30,34,35,36,39,42,48,51};
     //int n = sizeof(arr)/sizeof(arr[0]);
     node *root = A.createTree(arr, 0, 16);
+    cout << "Preorder: ";
     A.preorder(root);
     cout << endl;
+    cout << "Inorder: ";
     A.inorder(root);
     cout << endl;
+    cout << "Postorder: ";
     A.postorder(root);
     cout << endl;
     cout << "The height of tree is " << A.checkHeight(root) << endl;
-    
-    return 0;
 }
+
+/*
+Output:
+
+Preorder: 29 8 2 1 5 17 12 24 26 36 34 30 35 42 39 48 51 
+Inorder: 1 2 5 8 12 17 24 26 29 30 34 35 36 39 42 48 51 
+Postorder: 1 5 2 12 26 24 17 8 30 35 34 39 51 48 42 36 29 
+The height of tree is 5
+Program ended with exit code: 0
+
+*/
