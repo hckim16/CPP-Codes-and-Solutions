@@ -1,0 +1,138 @@
+// Header File
+
+#ifndef tree_hpp
+#define tree_hpp
+
+#include <stdio.h>
+#include <vector>
+
+struct node{
+    int value;
+    node *left;
+    node *right;
+};
+
+class bstree{
+private:
+    node *root;
+public:
+    bstree();
+    ~bstree();
+    void empty();
+    void empty(node *n);
+    node *createRoot(int v);
+    node *createTree(std::vector<int> arr, int start, int end);
+    node *insert(node *n, int v);
+    int checkHeight(node *n);
+    void preorder(node *n);
+    void inorder(node *n);
+    void postorder(node *n);
+};
+
+#endif /* tree_hpp */
+
+// Implementation File
+
+#include "tree.hpp"
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bstree::bstree(){
+    root = NULL;
+}
+
+bstree::~bstree(){
+    empty();
+}
+
+void bstree::empty(){
+    empty(root);
+}
+
+void bstree::empty(node *n){
+    if(n != NULL){
+        empty(n-> left);
+        empty(n-> right);
+        delete n;
+    }
+}
+
+node *bstree::createRoot(int v){
+    node *u = new node;
+    u-> value = v;
+    u-> left = u-> right = NULL;
+    return u;
+}
+
+node *bstree::createTree(vector<int> arr, int start, int end){
+    
+    if(start > end)
+        return NULL;
+    int middle = (start + end)/2;
+    node *root = createRoot(arr[middle]);
+    root-> left = createTree(arr, start, middle-1);
+    root-> right = createTree(arr, middle+1, end);
+    
+    return root;
+}
+
+int bstree::checkHeight(node *n){
+    if(n == NULL){
+        return 0;
+    }
+    else{
+        int left = checkHeight(n-> left);
+        int right = checkHeight(n-> right);
+        return 1 + max(left, right);
+    }
+}
+
+void bstree::preorder(node *n){
+    if(n != NULL){
+        cout << n-> value << " ";
+        preorder(n-> left);
+        preorder(n-> right);
+    }
+}
+
+void bstree::inorder(node *n){
+    if(n != NULL){
+        inorder(n-> left);
+        cout << n-> value << " ";
+        inorder(n-> right);
+    }
+}
+
+void bstree::postorder(node *n){
+    if(n != NULL){
+        postorder(n-> left);
+        postorder(n-> right);
+        cout << n-> value << " ";
+    }
+}
+
+// Main File
+
+#include "tree.hpp"
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    bstree A;
+    vector<int> arr = {1,2,5,8,12,17,24,26,29,30,34,35,36,39,42,48,51};
+    //int n = sizeof(arr)/sizeof(arr[0]);
+    node *root = A.createTree(arr, 0, 16);
+    A.preorder(root);
+    cout << endl;
+    A.inorder(root);
+    cout << endl;
+    A.postorder(root);
+    cout << endl;
+    cout << "The height of tree is " << A.checkHeight(root) << endl;
+    
+    return 0;
+}
