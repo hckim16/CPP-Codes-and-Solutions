@@ -110,10 +110,6 @@ void display(){
     cout << "end" << endl;
 }
 
-void makeDepthsLinkedList(){
-    
-}
-
 int main(){
     int arr[8] = {5,3,7,2,4,6,8};
     struct tree *parent = NULL;
