@@ -1,0 +1,161 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+};
+
+struct node{
+    int key;
+    node *next;
+    node *prev;
+};
+node *head = NULL;
+node *current = NULL;
+node *tail = NULL;
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value)
+        root-> left = createTree(root-> left, v);
+    else
+        root-> right = createTree(root-> right, v);
+    return root;
+}
+
+int getHeight(tree *root){
+    if(root == NULL)
+        return 0;
+    else{
+        int left = getHeight(root-> left);
+        int right = getHeight(root-> right);
+        return 1 + max(left, right);
+    }
+}
+
+struct node *addNode(struct node *head, int k){
+    node *temp = new node;
+    temp-> key = k;
+    temp-> next = head;
+    head = temp;
+    return temp;
+}
+
+struct node *insertBack(struct node *head, int k){
+    node *temp = new node;
+    temp-> next = NULL;
+    temp-> key = k;
+    if(head != NULL ){
+        current = head;
+        while(current-> next != NULL){
+            current = current-> next;
+        }
+        current-> next = temp;
+    }
+    else
+        head = temp;
+    return temp;
+}
+
+void display(node *n){
+    current = n;
+    while(current != NULL){
+        cout << current-> key << "->";
+        current = current-> next;
+    }
+    cout << "end" << endl;
+}
+
+void reverse(node *n){
+    current = n;
+    node *next = current-> next;
+    node *prev = new node;
+    current-> next = NULL;
+    while(next != NULL){
+        prev = next-> next;
+        next-> next = current;
+        current = next;
+        next = prev;
+    }
+    n = current;
+    display(n);
+    delete next;
+    delete prev;
+}
+
+void levelorder(tree *root, int h){
+    node *LL[h];
+    for(int i = 0; i < h; i++) LL[i] = NULL;
+    if(root == NULL)
+        return;
+    queue<tree *> q1;
+    queue<int> q2;
+    q1.push(root);
+    unsigned long level = 0;
+    while(!q1.empty()){
+        for(int i = 0; i < h; i++){
+            level = q1.size();
+            if(level == 0)
+                break;
+            while(level > 0){
+                tree *temp = q1.front();
+                if(temp-> left != NULL)
+                    q1.push(temp-> left);
+                if(temp-> right != NULL)
+                    q1.push(temp-> right);
+                LL[i] = addNode(LL[i], temp-> value);
+                q1.pop();
+                level--;
+            }
+        cout << endl;
+        reverse(LL[i]);
+        }
+    }
+}
+
+int main(){
+    int arr[8] = {5,3,7,2,4,6,8};
+    struct tree *parent = NULL;
+    parent = createRoot(arr[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(parent, arr[i]);
+    }
+
+    cout << "Binary Tree converted to Linked list." << endl;
+    cout << "A Linked list for each level or depth. " << endl;
+    cout << "This Tree has depth of 3, so the number of Linked List is 3" << endl;
+    cout << "The Linked List for this tree is: " << endl;
+    levelorder(parent, getHeight(parent));
+    cout << endl;
+    
+    return 0;
+}
+
+/*****Output*******
+Binary Tree converted to Linked list.
+A Linked list for each level or depth. 
+This Tree has depth of 3, so the number of Linked List is 3
+The Linked List for this tree is: 
+
+5->end
+
+3->7->end
+
+2->4->6->8->end
+
+Program ended with exit code: 0
+*/
