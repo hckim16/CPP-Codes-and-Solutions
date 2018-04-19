@@ -68,14 +68,22 @@ void levelorder(tree *root){
         return;
     queue<tree *> q1;
     q1.push(root);
+    unsigned long level = 0;
     while(!q1.empty()){
-        tree *temp = q1.front();
-        cout << temp-> value << " ";
-        if(temp-> left != NULL)
-            q1.push(temp-> left);
-        if(temp-> right != NULL)
-            q1.push(temp-> right);
-        q1.pop();
+        level = q1.size();
+        if(level == 0)
+            break;
+        while(level > 0){
+            tree *temp = q1.front();
+            cout << temp-> value << " ";
+            if(temp-> left != NULL)
+                q1.push(temp-> left);
+            if(temp-> right != NULL)
+                q1.push(temp-> right);
+            q1.pop();
+            level--;
+        }
+        cout << endl;
     }
 }
 
@@ -126,10 +134,11 @@ int main(){
     cout << "Inorder sequence is: ";
     inorder(parent);
     cout << endl;
-    cout << "Level order sequence is: ";
+    cout << "Level order sequence by depth: " << endl;
     levelorder(parent);
     cout << endl;
     
+    /*
     struct node *head = NULL;
     addNode(&head, 4);
     insertBack(1);
@@ -139,6 +148,19 @@ int main(){
     cout << "Linklist order is: ";
     display();
     cout << endl;
+    */
     
     return 0;
 }
+
+/*
+Preorder sequence is: 5 3 2 4 7 6 8 
+Postorder sequence is: 2 4 3 6 8 7 5 
+Inorder sequence is: 2 3 4 5 6 7 8 
+Level order sequence by depth: 
+5 
+3 7 
+2 4 6 8 
+
+Program ended with exit code: 0
+*/
