@@ -13,11 +13,9 @@ struct tree{
 struct node{
     int key;
     node *next;
-    node *prev;
 };
 node *head = NULL;
 node *current = NULL;
-node *tail = NULL;
 
 struct tree *createRoot(int v){
     struct tree *temp = new tree;
