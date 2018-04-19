@@ -159,3 +159,44 @@ The Linked List for this tree is:
 
 Program ended with exit code: 0
 */
+
+/*********Second Trial************
+
+int main(){
+    int arr[13] = {10,8,20,3,7,1,4,6,15,33,17,29,41};
+    struct tree *parent = NULL;
+    parent = createRoot(arr[0]);
+    for(int i = 1; i < 13; i++){
+        createTree(parent, arr[i]);
+    }
+
+    cout << "Binary Tree converted to Linked list." << endl;
+    cout << "A Linked list for each level or depth. " << endl;
+    cout << "This Tree has depth of 3, so the number of Linked List is 3" << endl;
+    cout << "The Linked List for this tree is: " << endl;
+    levelorder(parent, getHeight(parent));
+    cout << endl;
+    
+    return 0;
+}
+
+       ********Output**********
+Binary Tree converted to Linked list.
+A Linked list for each level or depth. 
+This Tree has depth of 3, so the number of Linked List is 3
+The Linked List for this tree is: 
+
+10->end
+
+8->20->end
+
+3->15->33->end
+
+1->7->17->29->41->end
+
+4->end
+
+6->end
+
+Program ended with exit code: 0
+*/
