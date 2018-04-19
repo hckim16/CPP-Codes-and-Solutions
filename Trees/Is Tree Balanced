@@ -1,0 +1,106 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    return temp;
+}
+
+int getHeight(tree *root){
+    if(root == NULL)
+        return 0;
+    else{
+        int left = getHeight(root-> left);
+        int right = getHeight(root-> right);
+        return 1 + max(left, right);
+    }
+}
+
+bool isTreeBalanced(tree *root){
+    
+    if(root == NULL)
+        return true;
+    int left = getHeight(root-> left);
+    //cout << left << endl;                                     debug to check value of left height
+    int right = getHeight(root-> right);
+    //cout << right << endl;                                    debug to check value of right height
+    if((abs(left - right) <= 1) && isTreeBalanced(root-> left) && isTreeBalanced(root-> right))
+        return true;
+    return false;
+}
+
+void isTreeBalanced(){
+    
+}
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value)
+        root-> left = createTree(root-> left, v);
+    else
+        root-> right = createTree(root-> right, v);
+    return root;
+}
+
+int main(){
+    /* case 1
+    int arr[8] = {5,3,7,2,4,6,8};
+    struct tree *parent = NULL;
+    parent = createRoot(arr[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(parent, arr[i]);
+    }
+    */
+    //case 3
+    int arr[13] = {10,8,20,3,7,1,4,6,15,33,17,29,41};
+    struct tree *parent = NULL;
+    parent = createRoot(arr[0]);
+    for(int i = 1; i < 13; i++){
+        createTree(parent, arr[i]);
+    }
+    
+    if(isTreeBalanced(parent))
+        cout << "Tree is balanced" << endl;
+    else
+        cout << "Tree is NOT balanced" << endl;
+    
+    return 0;
+}
+
+/******Output*****
+Case 1:
+2       showing recursively call for heights
+2
+1
+1
+0
+0
+0
+0
+1
+1
+0
+0
+0
+0
+Tree is balanced
+Program ended with exit code: 0
+
+
+Case 2:
+5
+3
+Tree is NOT balanced
+Program ended with exit code: 0
