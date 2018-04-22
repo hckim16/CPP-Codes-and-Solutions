@@ -54,6 +54,18 @@ int findMaxValue(tree *root){
     return current-> value;
 }
 
+bool searchTree(tree *root, int key){
+    if(root == NULL)
+        return false;
+    else if(key == root-> value)
+        return true;
+    else if(key < root-> value)
+        return searchTree(root-> left, key);
+    else if(key > root-> value)
+        return searchTree(root-> right, key);
+    return false;
+}
+
 int main(){
 
     int arr[8] = {5,3,7,2,4,6,8};
@@ -64,5 +76,17 @@ int main(){
     }
     
     cout << "Minimum value in binary search is tree: " << findMinValue(parent) << endl;
-    cout << "Maximum value in binary search is tree: " << findMaxValue(parent) << endl;    return 0;
+    cout << "Maximum value in binary search is tree: " << findMaxValue(parent) << endl;
+    cout << endl;
+    
+    int n;
+    cout << "Enter number to search: ";
+    cin >> n;
+    if(searchTree(parent, n))
+        cout << n << " is in Binary Search Tree";
+    else
+        cout << n << " is NOT in Binary Search Tree";
+    cout << endl;
+    
+    return 0;
 }
