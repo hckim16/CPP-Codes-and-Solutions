@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value)
+        root-> left = createTree(root-> left, v);
+    else
+        root-> right = createTree(root-> right, v);
+    return root;
+}
+
+int getHeight(tree *root){
+    if(root == NULL)
+        return 0;
+    else{
+        int left = getHeight(root-> left);
+        int right = getHeight(root-> right);
+        return 1 + max(left, right);
+    }
+}
+
+int findMinValue(tree *root){
+    struct tree *current = root;
+    while(current-> left != NULL){      //Go left until there is no more left and that is min value
+        current = current->left;        
+    }
+    return current-> value;
+}
+
+int findMaxValue(tree *root){
+    struct tree *current = root;
+    while(current-> right != NULL){     //Go right until there is no more right and that is max value
+        current = current->right;
+    }
+    return current-> value;
+}
+
+int main(){
+
+    int arr[8] = {5,3,7,2,4,6,8};
+    struct tree *parent = NULL;
+    parent = createRoot(arr[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(parent, arr[i]);
+    }
+    
+    cout << "Minimum value in binary search is tree: " << findMinValue(parent) << endl;
+    cout << "Maximum value in binary search is tree: " << findMaxValue(parent) << endl;    return 0;
+}
