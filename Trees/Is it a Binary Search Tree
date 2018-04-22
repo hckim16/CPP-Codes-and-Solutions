@@ -37,9 +37,6 @@ bool isBinary(tree *root, tree *leftSide = NULL, tree *rightSide = NULL){
     return isBinary(root-> left, leftSide, root) && isBinary(root-> right, root, rightSide);
 }
 
-void isTreeBalanced(){
-    
-}
 struct tree *createTree(struct tree *root, int v){
     
     if(root == NULL)
