@@ -1,0 +1,101 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+    tree *parent;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value)
+        root-> left = createTree(root-> left, v);
+    else
+        root-> right = createTree(root-> right, v);
+    return root;
+}
+
+int getHeight(tree *root){
+    if(root == NULL)
+        return 0;
+    else{
+        int left = getHeight(root-> left);
+        int right = getHeight(root-> right);
+        return 1 + max(left, right);
+    }
+}
+
+tree *findMin(tree *root){
+    if(root == NULL)
+        return NULL;
+    struct tree *current = root;
+    while(current-> left != NULL){
+        current = current->left;
+    }
+    return current;
+}
+
+tree *findSuccessor(tree * root, tree *t){
+
+    if(t == NULL)
+        return NULL;
+    if(t-> right != NULL)
+        return findMin(t->right);
+    else{
+        struct tree *u = NULL;
+        while(root != t){
+            if(t-> value < root-> value){
+                u = root;
+                root = root-> left;
+            }
+            else{
+                root = root-> right;
+            }
+        }
+        return u;
+    }
+}
+
+int main(){
+
+    int arr[8] = {5,3,7,2,4,6,8};
+    struct tree *bST = NULL;
+    bST = createRoot(arr[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(bST, arr[i]);
+    }
+    tree *temp = bST-> right;
+    tree *temp1 = bST-> right-> left;
+    tree *temp2 = bST-> left-> left;
+    
+    cout << "Successor to " << temp-> value << " is " << findSuccessor(bST, temp)-> value << endl;
+    cout << "Successor to " << temp1-> value << " is " << findSuccessor(bST, temp1)-> value << endl;
+    cout << "Successor to " << temp2-> value << " is " << findSuccessor(bST, temp2)-> value << endl;
+    cout << endl;
+    
+    return 0;
+}
+
+/*****Output********
+
+Successor to 7 is 8
+Successor to 6 is 7
+Successor to 2 is 3
+
+Program ended with exit code: 0
+
+*/
