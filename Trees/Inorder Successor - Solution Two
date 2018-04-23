@@ -1,0 +1,95 @@
+//Uses pointer to parent node
+//Modified createRoot and createTree function to define parent node to use in findSuccessor function.
+
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+    tree *parent;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    temp-> parent = NULL;                           //line added to set parent node to NULL
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value){
+        tree *leftChild = createTree(root-> left, v);
+        root-> left = leftChild;
+        leftChild-> parent = root;                  //Set parent of left to root
+    }
+    else{
+        tree *rightChild = createTree(root-> right, v);
+        root-> right = rightChild;
+        rightChild-> parent = root;                 //set parent of right to root
+    }
+    return root;
+}
+
+int getHeight(tree *root){
+    if(root == NULL)
+        return 0;
+    else{
+        int left = getHeight(root-> left);
+        int right = getHeight(root-> right);
+        return 1 + max(left, right);
+    }
+}
+
+tree *findMin(tree *root){
+    if(root == NULL)
+        return NULL;
+    struct tree *current = root;
+    while(current-> left != NULL){
+        current = current->left;
+    }
+    return current;
+}
+
+tree *findSuccessor(tree *root, tree *t){
+    if(t == NULL)
+        return NULL;
+    if(t-> right != NULL)
+        return findMin(t-> right);
+    else{
+        struct tree *p = t-> parent;                    //Set point to parent of target node
+        while(p != NULL && p-> left != t){
+            t = p;                                      //Move up the tree
+            p = p-> parent;
+        }
+        return p;
+    }
+}
+
+int main(){
+
+    int arr[8] = {5,3,7,2,4,6,8};
+    struct tree *bST = NULL;
+    bST = createRoot(arr[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(bST, arr[i]);
+    }
+    tree *temp = bST-> right;
+    tree *temp1 = bST-> right-> left;
+    tree *temp2 = bST-> left-> left;
+    
+    cout << "Successor to " << temp-> value << " is " << findSuccessor(bST, temp)-> value << endl;
+    cout << "Successor to " << temp1-> value << " is " << findSuccessor(bST,temp1)-> value << endl;
+    cout << "Successor to " << temp2-> value << " is " << findSuccessor(bST, temp2)-> value << endl;
+    cout << endl;
+    
+    return 0;
+}
