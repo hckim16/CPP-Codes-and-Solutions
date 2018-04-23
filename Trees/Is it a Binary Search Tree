@@ -85,9 +85,9 @@ int main(){
     */
  
     if(isBinary(parent))
-        cout << "Tree is binary" << endl;
+        cout << "Tree is binary search tree" << endl;
     else
-        cout << "Tree is NOT binary" << endl;
+        cout << "Tree is NOT binary search tree" << endl;
     
     return 0;
 }
@@ -95,18 +95,18 @@ int main(){
 /******* Output******
 
 Case 1:
-Tree is binary
+Tree is binary search tree
 Program ended with exit code: 0
 
 Case 2:
-Tree is binary
+Tree is binary search tree
 Program ended with exit code: 0
 
 Case 3:
-Tree is binary
+Tree is binary search tree
 Program ended with exit code: 0
 
 Case 4:
-Tree is NOT binary
+Tree is NOT binary search tree
 Program ended with exit code: 0
 */
