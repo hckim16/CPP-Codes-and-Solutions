@@ -55,7 +55,7 @@ tree *goUp(tree *child, int diff){          //Move child up
     return child;
 }
 
-tree *findLCM(tree *p, tree *q){            //Find first common ancestor
+tree *findFirstCommonAncestor(tree *p, tree *q){            //Find first common ancestor
     int diff = getDepth(p) - getDepth(q);   //Get difference in depth
     tree *first;
     tree *second;
@@ -86,7 +86,7 @@ int main(){
         createTree(root, arr[i]);
     }
     
-    cout << (findLCM(root-> left-> right, root-> right-> right-> right-> right))-> value;
+    cout << (findFirstCommonAncestor(root-> left-> right, root-> right-> right-> right-> right))-> value;
     cout << endl;
 
     return 0;
