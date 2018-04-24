@@ -1,0 +1,93 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+    tree *parent;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    temp-> parent = NULL;
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value){
+        tree *leftChild = createTree(root-> left, v);
+        root-> left = leftChild;
+        leftChild-> parent = root;
+    }
+    else{
+        tree *rightChild = createTree(root-> right, v);
+        root-> right = rightChild;
+        rightChild-> parent = root;
+    }
+    return root;
+}
+
+int getDepth(tree *child){                  //Get depth of child
+    int depth = 0;
+    while(child != NULL){
+        child = child-> parent;
+        depth++;
+    }
+    return depth;
+}
+
+tree *goUp(tree *child, int diff){          //Move child up
+    while(diff > 0 && child != NULL){
+        child = child-> parent;
+        diff--;
+    }
+    return child;
+}
+
+tree *findLCM(tree *p, tree *q){            //Find first common ancestor
+    int diff = getDepth(p) - getDepth(q);   //Get difference in depth
+    tree *first;
+    tree *second;
+    if(diff > 0){                           //If left child (p) deeper than fright child
+        first = q;                              //Set right child to first
+        second = p;                             //Set left child to second
+    }
+    else{                                   //If right child (q) deepr than left child
+        first = p;                              //Set left child to first
+        second = q;                             //Set right child to second
+    }
+    second = goUp(second, abs(diff));       //Move second up to same level as first
+    
+    while(first != second && first != NULL && second != NULL){  //Move up together until first = second
+        first = first-> parent;             //Move up simultaneously
+        second = second-> parent;           //Move up
+    }
+    return first;                           //Can return either first or second as common ancestor
+}
+
+int main(){
+    
+
+    int arr[11] = {5,3,7,2,4,0,1,6,8,9,14};
+    struct tree *root = NULL;
+    root = createRoot(arr[0]);
+    for(int i = 1; i < 11; i++){
+        createTree(root, arr[i]);
+    }
+    
+    cout << (findLCM(root-> left-> right, root-> right-> right-> right-> right))-> value;
+    cout << endl;
+
+    return 0;
+}
