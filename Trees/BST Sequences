@@ -1,0 +1,137 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+    tree *parent;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    temp-> parent = NULL;
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value){
+        tree *leftChild = createTree(root-> left, v);
+        root-> left = leftChild;
+        leftChild-> parent = root;
+    }
+    else{
+        tree *rightChild = createTree(root-> right, v);
+        root-> right = rightChild;
+        rightChild-> parent = root;
+    }
+    return root;
+}
+
+//This function to find all possible sequences taken from https://stackoverflow.com/questions/21211701/
+given-a-bst-and-its-root-print-all-sequences-of-nodes-which-give-rise-to-the-sa/24398114#24398114
+//A couple of words changed for my benefit otherwise this code is entirely the work of Atul Vaibhav
+https://stackoverflow.com/users/1644614/atul-vaibhav.
+//Vaguely understand the the logic but decided to present this instead of my own solution, as I still working on my solution
+//Once I have my own solution, I will present both this code and own.
+
+vector<vector<int> > findAllSeq(tree *root)
+{
+    if (root == NULL) {
+        vector<int> seq;
+        vector<vector<int> > v;
+        v.push_back(seq);
+        return v;
+    }
+    else if (root -> left == NULL && root -> right == NULL) {
+        vector<int> seq;
+        seq.push_back(root -> value);
+        vector<vector<int> > v;
+        v.push_back(seq);
+        return v;
+    }
+    
+    vector<vector<int> > results, leftChild, rightChild;
+    leftChild= findAllSeq(root -> left);
+    rightChild = findAllSeq(root -> right);
+    unsigned long size = leftChild[0].size() + rightChild[0].size() + 1;
+    
+    vector<bool> flags(leftChild[0].size(), 0);
+    for (int k = 0; k < rightChild[0].size(); k++)
+        flags.push_back(1);
+    
+    for (int i = 0; i < leftChild.size(); i++) {
+        for (int j = 0; j < rightChild.size(); j++) {
+            do {
+                vector<int> temp(size);
+                temp[0] = root-> value;
+                int l = 0, r = 0;
+                for (int k = 0; k < flags.size(); k++) {
+                    if(flags[k])
+                        temp[k+1] = rightChild[j][r++];
+                    else
+                        temp[k+1] = leftChild[i][l++];
+                }
+                results.push_back(temp);
+            } while (next_permutation(flags.begin(), flags.end()));
+        }
+    }
+    
+    return results;
+}
+
+int main(){
+    
+
+    int arr[7] = {5,3,2,4,7,6,8};
+    struct tree *root = NULL;
+    root = createRoot(arr[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(root, arr[i]);
+    }
+    
+    vector<vector<int> > vec;
+    
+    vec = findAllSeq(root);
+    
+    int count = 0;
+    for(int i = 0; i < vec.size(); i++){
+        for(int j = 0; j < vec[0].size(); j++){
+            cout << vec[i][j] << " ";
+        }
+        count++;
+        cout << endl;
+    }
+    cout << "Total number of permutations is: " << count;
+    cout << endl;
+    
+    cout << endl;
+
+    return 0;
+}
+
+/******Output**********
+5 3 2 4 7 6 8 
+5 3 2 7 4 6 8 
+5 3 2 7 6 4 8 
+5 3 2 7 6 8 4 
+*
+*
+*
+*
+5 7 8 3 6 4 2 
+5 7 8 6 3 4 2 
+Total number of permutations is: 80
+
+Program ended with exit code: 0
+*/
