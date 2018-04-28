@@ -1,0 +1,140 @@
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <cstdlib>
+#include <vector>
+#include <cmath>
+#include <string>
+
+using namespace std;
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+    tree *parent;
+};
+
+struct tree *createRoot(int v){
+    struct tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    temp-> parent = NULL;
+    return temp;
+}
+
+struct tree *createTree(struct tree *root, int v){
+    
+    if(root == NULL)
+        return createRoot(v);
+    else if(v <= root-> value){
+        tree *leftChild = createTree(root-> left, v);
+        root-> left = leftChild;
+        leftChild-> parent = root;
+    }
+    else{
+        tree *rightChild = createTree(root-> right, v);
+        root-> right = rightChild;
+        rightChild-> parent = root;
+    }
+    return root;
+}
+
+vector <int> preorder(tree *root, vector <int> *vec){   //create an vector in preorder sequence
+    if(root != NULL){
+        vec-> push_back(root-> value);                  //push each root value into vector
+        preorder(root-> left, vec);
+        preorder(root-> right, vec);
+    }
+    return *vec;
+}
+
+vector <int> inorder(tree *root, vector <int> *vec){    //create a vector in inorder sequence
+    if(root != NULL){
+        inorder(root-> left, vec);
+        vec-> push_back(root-> value);                  //push each root value into vector
+        inorder(root-> right, vec);
+    }
+    return *vec;
+}
+
+string stringify(vector <int> vec){
+    stringstream ss;
+    for(auto p = vec.begin(); p != vec.end(); p++){
+        ss << *p;
+    }
+    return ss.str();
+}
+
+bool isSubTree(tree *root, tree *root1){
+    
+    vector <int> inOrderMainTree, preOrderMainTree;
+    vector <int> inOrderSubTree, preOrderSubTree;
+    
+    inorder(root, &inOrderMainTree);                    //pass into new vector
+    /*for(auto p = inOrderMainTree.begin(); p != inOrderMainTree.end(); p++){   //to check that vector returned correctly
+        cout << *p << " ";
+    }
+    cout << endl;*/
+    
+    preorder(root, &preOrderMainTree);
+    /*for(auto p = preOrderMainTree.begin(); p != preOrderMainTree.end(); p++){  //to check that vector returned correctly
+        cout << *p << " ";
+    }
+    cout << endl;*/
+    
+    inorder(root1, &inOrderSubTree);
+    /*for(auto p = inOrderSubTree.begin(); p != inOrderSubTree.end(); p++){   //to check that vector returned correctly
+        cout << *p << " ";
+    }
+    cout << endl;*/
+
+    preorder(root1, &preOrderSubTree);
+    /*for(auto p = preOrderSubTree.begin(); p != preOrderSubTree.end(); p++){   //to check that vector returned correctly
+        cout << *p << " ";
+    }
+    cout << endl;*/
+    
+    string inOrdMainTree, preOrdMainTree;
+    string inOrdSubTree, preOrdSubTree;
+    inOrdMainTree = stringify(inOrderMainTree);     //convert vector into string
+    //cout << inOrdMainTree << endl;                //to check that vector turned to string correctly
+    preOrdMainTree = stringify(preOrderMainTree);
+    //cout << preOrdMainTree << endl;
+    inOrdSubTree = stringify(inOrderSubTree);
+    //cout << inOrdSubTree << endl;
+    preOrdSubTree = stringify(preOrderSubTree);
+    //cout << preOrdSubTree << endl;
+    
+    size_t found = inOrdMainTree.find(inOrdSubTree);
+    size_t found1 = preOrdMainTree.find(preOrdSubTree);
+    
+    if(found != string::npos && found1 != string::npos)     //find sub string in main string
+        return true;                                        //if both stringified inorder and stringified preorder match found, 
+    return false;                                           //smaller tree is a part of larger tree
+}
+
+int main(){
+    
+    int arr[9] = {10,20,5,3,2,4,7,6,8};
+    struct tree *root = NULL;
+    root = createRoot(arr[0]);
+    for(int i = 1; i < 9; i++){
+        createTree(root, arr[i]);
+    }
+    
+    int arr1[7] = {5,3,2,4,7,6,8};
+    struct tree *root1 = NULL;
+    root1 = createRoot(arr1[0]);
+    for(int i = 1; i < 7; i++){
+        createTree(root1, arr1[i]);
+    }
+    
+    if(isSubTree(root, root1))
+        cout << "is subtree" << endl;
+    else
+        cout << "is NOT subtree" << endl;
+    cout << endl;
+
+    return 0;
+}
