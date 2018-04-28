@@ -66,7 +66,13 @@ string stringify(vector <int> vec){
     return ss.str();
 }
 
-bool isSubTree(tree *root, tree *root1){
+bool isSubTree(tree *root, tree *root1){                //check if root1 is part of root
+    
+    if(root1 == NULL)                                   //if root1 is NULL, then it must be part of root
+        return true;                                    //by default
+    
+    if(root == NULL)                                    //if root is NULL, root1 cannot be a part of it
+        return false;
     
     vector <int> inOrderMainTree, preOrderMainTree;
     vector <int> inOrderSubTree, preOrderSubTree;
@@ -110,8 +116,8 @@ bool isSubTree(tree *root, tree *root1){
     size_t found1 = preOrdMainTree.find(preOrdSubTree);
     
     if(found != string::npos && found1 != string::npos)     //find sub string in main string
-        return true;                                        //if both stringified inorder and stringified preorder match found, 
-    return false;                                           //smaller tree is a part of larger tree
+        return true;                                        //if both inorder and preorder match, substring a part of
+    return false;                                           //main string
 }
 
 int main(){
@@ -138,3 +144,4 @@ int main(){
 
     return 0;
 }
+
