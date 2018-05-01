@@ -1,0 +1,281 @@
+//This program is a very simple approach.  Saw a lot of solutin that seem quite "complicated."
+//The issue with my solution may be that it is not very efficient.  I need to work through it some more to see what
+//time and space complexity is.
+//I use the inorder traversal function to convert a binary search tree into an array.
+//From that array, I then use rand() and srand() to generate a random number from the array.
+//This problem also has a delete function and find function.  
+//Find function only confirms existence node in the tree.
+//This will work with a binary tree.  The input in main just has to be by node using createRoot function instead
+//of using the for loop and createTree function
+
+//header file
+
+#ifndef BSTree_hpp
+#define BSTree_hpp
+
+#include <stdio.h>
+#include <vector>
+
+struct tree{
+    int value;
+    tree *left;
+    tree *right;
+};
+
+class bSTree{
+private:
+    tree *root;
+public:
+    bSTree();
+    ~bSTree();
+    void destroy();
+    void destroy(tree *t);
+    tree *createRoot(int v);
+    tree *createTree(tree *root, int v);
+    tree *min(tree *root);
+    tree *deleteRoot(tree *root, int v);
+    std::vector <int> treetoarray(tree *root);
+    void getRandomNode(std::vector <int> vec);
+    int getHeight(tree *root);
+    int findNode(int v);
+    void inOrder(tree *root);
+    std::vector <int> inOrderArray(tree *root, std::vector <int> *vec);
+    bool findNode(tree *root, int v);
+};
+
+#endif /* BSTree_hpp */
+
+//implementation file
+
+#include "BSTree.hpp"
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+bSTree::bSTree(){
+    root = NULL;
+}
+bSTree::~bSTree(){
+    if(root != NULL)
+        destroy();
+}
+tree *bSTree::createRoot(int v){
+    tree *temp = new tree;
+    temp-> value = v;
+    temp-> left = temp-> right = NULL;
+    return temp;
+    
+}
+
+void bSTree::destroy(){
+    destroy(root);
+}
+
+void bSTree::destroy(tree *t){
+    if(t != NULL){
+        destroy(t-> left);
+        destroy(t-> right);
+        delete t;
+    }
+}
+
+tree *bSTree::createTree(tree *root, int v){
+    if(root == NULL)
+        root = createRoot(v);
+    else if(v <= root-> value)
+        root-> left = createTree(root-> left, v);
+    else
+        root-> right = createTree(root-> right, v);
+    return root;
+}
+
+tree *bSTree::min(tree *root){
+    if(root == NULL)
+        return NULL;
+    if(root-> left != NULL)
+        return min(root-> left);
+    return root;
+}
+
+void bSTree::inOrder(tree *root){
+    if(root != NULL){
+        inOrder(root-> left);
+        std::cout << root-> value << " ";
+        inOrder(root-> right);
+    }
+}
+
+std::vector <int> bSTree::inOrderArray(tree *root, std::vector <int> *vec){
+    if(root != NULL){
+        inOrderArray(root-> left, vec);
+        vec-> push_back(root-> value);
+        inOrderArray(root-> right, vec);
+    }
+    return *vec;
+}
+
+tree *bSTree::deleteRoot(tree *root, int v){
+    if(root == NULL)
+        return root;
+    else if(v < root-> value)
+        root-> left = deleteRoot(root-> left, v);
+    else if( v > root-> value)
+        root-> right = deleteRoot(root-> right, v);
+    else{
+        if(root-> left == NULL && root-> right == NULL){
+            delete root;
+            root = NULL;
+        }
+        else if(root-> left == NULL && root-> right != NULL){
+            tree *temp = root;
+            root = root-> right;
+            delete temp;
+        }
+        else if(root-> left != NULL && root-> right == NULL){
+            tree *temp = root;
+            root = root-> left;
+            delete temp;
+        }
+        else{
+            tree *temp = min(root-> right);
+            root-> value = temp-> value;
+            root-> right = deleteRoot(root-> right, temp-> value);
+        }
+    }
+    return root;
+}
+
+std::vector <int> bSTree::treetoarray(tree *root){
+    std::vector <int> vec;
+    inOrderArray(root, &vec);
+    return vec;
+}
+
+void bSTree::getRandomNode(std::vector <int> vec){
+    srand((unsigned int) (time(NULL)));                             //seed random number generator
+    std::cout << "Randomly generated number is: ";;
+    int random_number = (rand() % static_cast<int>(vec.size()));    //pseudorandom modulo size of vector
+    std::cout << vec[random_number] << std::endl;                   //random number == index of vector
+    
+}
+int bSTree::findNode(int v){
+    return 1;
+}
+
+int bSTree::getHeight(tree *root){
+    if(root == NULL)
+        return 0;
+    else
+        return 1 + std::max(getHeight(root-> left), getHeight(root-> right));
+}
+
+bool bSTree::findNode(tree *root, int v){
+    tree *current = root;
+    if(current == NULL)
+        return false;
+    while(current != NULL){
+        if(current-> value == v){
+            return true;
+            break;
+        }
+        if(v < current-> value)
+            current = current-> left;
+        else if(v > current-> value)
+            current = current-> right;
+    }
+    if(current == NULL)
+        return false;
+    return false;
+}
+
+//Main file
+
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include "BSTree.hpp"
+
+int main(){
+    
+    bSTree a;
+    int arr[23] = {5,3,7,2,4,6,8,12,43,12,54,67,87,43,22,14,13,19,18,55,44,32,39};
+    struct tree *parent = NULL;
+    parent = a.createRoot(arr[0]);
+    for(int i = 1; i < 23; i++){
+        a.createTree(parent, arr[i]);
+    }
+    
+    //to verify that tree populated correctly
+    std::cout << "Inorder sequence of nodes before deletion: " << std::endl;
+    a.inOrder(parent);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    
+    //to verify structure by checking height
+    std::cout << "Height of tree is " << a.getHeight(parent);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    
+    //delete node function
+    int n;
+    std::cout << "Enter number to delete: ";
+    std::cin >> n;
+    if(a.deleteRoot(parent, n))
+        std::cout << n << " is deleted";
+    else
+        std::cout << n << " is NOT in Binary Search Tree";
+    std::cout << std::endl;
+    std::cout << std::endl;
+    
+    //verify node deleted
+    std::cout << "Inorder sequence of nodes after deletion: " << std::endl;
+    a.inOrder(parent);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    
+    //confirm if search for node is in tree
+    int m;
+    std::cout << "Enter number to confirm if in tree: ";
+    std::cin >> m;
+    std::cout << std::endl;
+    if(a.findNode(parent, m))
+        std::cout << m << " is present in tree" << std::endl;
+    else
+        std::cout << m << " is NOT present in tree" << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    
+    //generate a random node in tree
+    std::vector <int> vec = a.treetoarray(parent);
+    std::cout << "Generate a random number from binary search tree" << std::endl;
+    a.getRandomNode(vec);
+    
+    return 0;
+}
+
+/********Output**********
+
+Inorder sequence of nodes before deletion: 
+2 3 4 5 6 7 8 12 12 13 14 18 19 22 32 39 43 43 44 54 55 67 87 
+
+Height of tree is 10
+
+Enter number to delete: 19
+19 is deleted
+
+Inorder sequence of nodes after deletion: 
+2 3 4 5 6 7 8 12 12 13 14 18 22 32 39 43 43 44 54 55 67 87 
+
+Enter number to confirm if in tree: 44
+
+44 is present in tree
+
+
+Generate a random number from binary search tree
+Randomly generated number is: 54
+
+Program ended with exit code: 0
+
+*********************************/
