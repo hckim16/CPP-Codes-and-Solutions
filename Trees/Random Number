@@ -159,9 +159,6 @@ void bSTree::getRandomNode(std::vector <int> vec){
     std::cout << vec[random_number] << std::endl;                   //random number == index of vector
     
 }
-int bSTree::findNode(int v){
-    return 1;
-}
 
 int bSTree::getHeight(tree *root){
     if(root == NULL)
