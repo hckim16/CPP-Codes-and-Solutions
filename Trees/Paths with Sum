@@ -1,0 +1,122 @@
+//Had real difficulties with this code
+//turned to GeeksforGeeks https://www.geeksforgeeks.org/print-k-sum-paths-binary-tree/ to understand code
+//the following code is essentially from that webpage, just rewritten a "little" bit for my benefit.  The link will take you
+//to original code
+//one change I added was the counter at line 41 and 52, which I called in the main at line 102. The original challenge asks for
+//the number of paths only.
+//GeekforGeeks shows the actual paths.  This program allows for both.
+//to just show number of paths, comment out lines 56,57,100, and 101
+
+#include <iostream>
+#include <stack>
+#include <vector>
+
+struct tree {
+    int value;
+    tree *left;
+    tree *right;
+};
+
+tree *createRoot(int key){
+    struct tree *u = new tree;
+    u-> value = key;
+    u-> left = u-> right = NULL;
+    return u;
+}
+
+tree *createTree(tree *root, int key){                            //for creating a binary search tree
+    if(root == NULL)
+        return createRoot(key);
+    else if(key < root-> value){
+        root-> left = createTree(root-> left, key);
+    }
+    else{
+        root-> right = createTree(root-> right, key);
+    }
+    return root;
+}
+
+void printVec(std::vector <int> vec, int j){                      //output vector
+    for(int i = j; i < vec.size(); i++){
+        std::cout << vec[i] << " ";
+    }
+}
+int numberOfPaths = 0;                                            //set count to 0
+void pathHelper(tree *root, std::vector <int> vec, int key){
+    if(root == NULL)
+        return;
+    vec.push_back(root-> value);                                  //preorder traversal to push root values into vector
+    pathHelper(root-> left, vec, key);                            //go left
+    pathHelper(root-> right, vec, key);                           //go right
+    int sum = 0; //set running total to 0
+    for(int i = vec.size()-1; i >= 0; i--){                       //begin summing backward from last value in vector
+        sum = sum + vec[i];                                       //get running total
+        if(sum == key){                                           //if running total equals target sum
+            numberOfPaths++;                                      // increment counter
+            printVec(vec, i);                                     //print out what is in vector
+            std::cout << std:: endl;
+        }
+    }
+    vec.pop_back();                                               //remove last value in vector
+}
+
+void findPaths(tree *root, int key){                             //create vector to hold running totals
+    std::vector <int> vec;
+    pathHelper(root, vec, key);
+}
+
+
+int main() {
+    /* This inserts to create a binary search tree
+    int arr[15] = {20,10,30,5,7,25,37,2,3,6,8,22,23,33,39};
+    struct tree *root = NULL;
+    root = createRoot(arr[0]);
+    for(int i = 1; i < 15; i++){
+        createTree(root, arr[i]);
+    }
+    */
+    
+    struct tree *root = createRoot(5);
+    root-> left = createRoot(8);
+    root-> left-> left = createRoot(-2);
+    root-> left-> left-> right = createRoot(2);
+    root-> left-> right = createRoot(-3);
+    root-> left-> right-> left = createRoot(6);
+    root-> right = createRoot(1);
+    root-> right-> left = createRoot(10);
+    root-> right-> left-> left = createRoot(9);
+    root-> right-> left-> left-> right = createRoot(2);
+    root-> right-> left-> right = createRoot(2);
+    root-> right-> right = createRoot(-2);
+    root-> right-> right-> left = createRoot(1);
+    root-> right-> right-> right = createRoot(7);
+    
+    int n;
+    /* This section for entering target sum commented out for testing
+    std::cout << "Enter the target sum: ";
+    std::cin >> n;
+     */
+    n = 11; //constant used for testing
+    std::cout << "The paths that equal the target sum: " << n << std::endl;
+    std::cout << std::endl;
+    findPaths(root, n);
+    std::cout << std::endl;
+    std::cout << "Enter of paths in tree that total the target sum: ";
+    std::cout << numberOfPaths << std::endl;
+    std::cout << std::endl;
+    return 0;
+}
+
+/**************Output****************
+The paths that equal the target sum: 11
+
+5 8 -2 
+8 -3 6 
+9 2 
+1 10 
+5 1 -2 7 
+
+Enter of paths in tree that total the target sum: 5
+
+Program ended with exit code: 0
+************************************/
