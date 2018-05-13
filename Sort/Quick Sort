@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+
+struct Player {
+    std::string name;
+    int score;
+};
+
+void swap(std::vector<Player> &P, int a, int b){
+    Player temp = P[a];
+    P[a] = P[b];
+    P[b] = temp;
+}
+
+int partition(std::vector<Player> &P, int start, int end){
+    int pivot = P[end].score;
+    int partitionIndex = start;
+    for(int i = start; i < end; i++){
+        if(P[i].score >= pivot){
+            if(P[i].score == pivot){
+                if(P[i].name > P[end].name)
+                    swap(P, i, end);
+            }
+            swap(P, i, partitionIndex);
+            partitionIndex++;
+        }
+    }
+    swap(P, partitionIndex, end);
+    return partitionIndex;
+}
+
+void quickSort(std::vector<Player> &P, int start, int end){
+    if(start < end){
+        int partitionIndex = partition(P, start, end);
+        quickSort(P, start, partitionIndex-1);
+        quickSort(P, partitionIndex+1, end);
+    }
+}
+
+std::vector <Player> comparator(std::vector<Player> players) {
+    quickSort(players, 0, players.size()-1);
+    return players;
+    
+}
+
+int main(int argc, const char * argv[]) {
+    
+    int n;
+    std::cin >> n;
+    std::vector <Player> players;
+    std::string name;
+    int score;
+    for(int i = 0; i < n; i++){
+        std::cout << "enter: ";
+        std::cin >> name >> score;
+        Player p;
+        p.name = name;
+        p.score = score;
+        players.push_back(p);
+    }
+    std::cout << std::endl;
+    std::vector <Player> answer = comparator(players);
+    for(int i = 0; i < answer.size(); i++) {
+        std::cout << answer[i].name << " " << answer[i].score << std::endl;
+    }
+    return 0;
+}
