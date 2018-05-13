@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+struct Player {
+    std::string name;
+    int score;
+};
+
+bool compare(Player a, Player b){
+    
+    if(a.score > b.score)
+        return true;
+    if(a.score == b.score)
+        return a.name < b.name;
+    return false;
+}
+
+std::vector <Player> comparator(std::vector<Player> players) {
+    sort(players.begin(), players.end(), compare);
+    return players;
+}
+
+int main(int argc, const char * argv[]) {
+    
+    int n;
+    std::cin >> n;
+    std::vector <Player> players;
+    std::string name;
+    int score;
+    for(int i = 0; i < n; i++){
+        std::cout << "enter: ";
+        std::cin >> name >> score;
+        Player p;
+        p.name = name;
+        p.score = score;
+        players.push_back(p);
+    }
+    std::cout << std::endl;
+    std::vector <Player> answer = comparator(players);
+    for(int i = 0; i < answer.size(); i++) {
+        std::cout << answer[i].name << " " << answer[i].score << std::endl;
+    }
+    return 0;
+}
