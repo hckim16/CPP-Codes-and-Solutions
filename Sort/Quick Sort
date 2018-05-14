@@ -43,6 +43,8 @@ std::vector <Player> comparator(std::vector<Player> players) {
     
 }
 
+//The main with cin input from HackerRank exactly//
+
 int main(int argc, const char * argv[]) {
     
     int n;
