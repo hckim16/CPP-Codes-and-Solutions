@@ -1,0 +1,58 @@
+//This challenge came from HackerRank - https://www.hackerrank.com/challenges/ctci-coin-change/problem
+//This youtube helped greatly, done in Java but logic followed to C++ - https://www.youtube.com/watch?v=jaNZ83Q3QGc&t=352s
+//Initial commented logic/data was done with array
+//Change input was vector, so amended logic to handle vector.
+//Initially used vector <int> ... but it failed 3 test inputs.  Changed all to vector <long long> and it passed all test cases
+//Assuming some of those test cases were very large
+
+#include <iostream>
+#include <vector>
+
+/* Test logic with array
+int countCoinChange(int arr[], int m, int n){
+    int combination[10] = {0};
+    combination[0] = 1;
+    for(int i = 0; i < m; i++){
+        for(int j = 1; j < n+1; j++){
+            if(j >= arr[i]){
+                combination[j] += combination[j-arr[i]];
+            }
+        }
+    }
+    return combination[n];
+}
+*/
+
+long long make_change(std::vector<long long> coins, int money) {
+    std::vector<long long> combination(money+1);
+    combination[0] = 1;
+    for(int i = 0; i < coins.size(); i++){
+        for(int j = 1; j < combination.size(); j++){
+            if(j >= coins[i]){
+                combination[j] += combination[j-coins[i]];
+            }
+        }
+    }
+    return combination[money];
+}
+
+
+int main(){
+    /* Test data
+    int arr[] = {1, 3, 5, 6};
+    int m = 4;
+    int n = 9;
+    std::cout << "Number of ways to change " << n << " is " << countCoinChange(arr, 4, 9) << std::endl;
+     */
+    
+    int n;
+    int m;
+    std::cin >> n >> m;
+    std::vector<long long> coins(m);
+    for(int coins_i = 0;coins_i < m;coins_i++){
+        std::cin >> coins[coins_i];
+    }
+    std::cout << make_change(coins, n) << std::endl;
+    
+    return 0;
+}
