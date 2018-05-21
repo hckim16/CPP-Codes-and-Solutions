@@ -1,0 +1,33 @@
+//This code came from https://www.youtube.com/watch?v=PPgGJvgv2Ag which was the clearest explanation of the solution
+//to me.
+//This code uses arrays but can easily adapted to use vectors and vector inputs
+
+#include <iostream>
+
+int minCoins(int coins[], int numCoins, int targetChange){
+    
+    int table[numCoins][targetChange+1];
+    for(int i = 0; i < numCoins; i++){
+        table[i][0] = 0;
+    }
+    for(int i = 0; i < numCoins; i++){
+        for(int j = 0; j < targetChange+1; j++){
+            if(j >= coins[i]){
+                for(int k = i; k < numCoins; k++){
+                    table[k][j] = table[i][j-coins[i]]+1; //This line is the most critical line and it took me some
+                }                                         //to understand, but going cell by cell, it's actually quite
+            }                                             //understandable.
+        }
+    }
+    
+    return table[numCoins-1][targetChange];
+}
+
+int main() {
+    // your code goes here
+    int coins[] = {1,3,5,6};
+    int numCoins = 4;
+    int targetChange=9;
+    std::cout <<"Minimum coins needed to make "<< targetChange << " is " << minCoins(coins, numCoins, targetChange) << std::endl;
+    return 0;
+}
