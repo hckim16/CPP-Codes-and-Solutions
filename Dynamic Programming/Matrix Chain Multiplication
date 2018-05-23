@@ -69,4 +69,30 @@ The order of multiplicatios begans from cell[1][n]:
 0 0 0 0 0 0 0 
 Program ended with exit code: 0
 
+Explanation:
+- int p[] = {10,5,2,20,12,4,60} stands for:
+
+    (10X5) (5X2) (2X20) (20X12) (12X4) (4X6)
+    
+Begin at cell[1][n] which in this case is cell[1][6].  The number is 2.  Which splits that row between 1-2 and 3-6. 
+Intuitively, there are 6 matrices.  The split is between matrix 2 and matrix 3.  the matrices are relabeled as
+
+    A B C D E F
+    
+then the split is between A B and C D E F.  No point to splitting A and B, those two can be represented as (A X B).
+For C D E F, go back to the 2D array and look at cell[3][6] and the number there is 5.  So, the split between 3-6 is 5
+or 3-5 and 6-6.  6-6 is simply F.
+
+3-5 split occurs at 4 according to cell[3][5].  That split products 3-4 and 5, or:
+
+    (C X D) X E
+    
+Multiple to 6-6 or F
+
+    ((C X D) X E) X F
+   
+Add that to A - B and the final order of operation is:
+
+    (A X B) X ((C X D) X E) X F
+
 *********************/
