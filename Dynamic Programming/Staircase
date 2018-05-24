@@ -1,0 +1,46 @@
+//Two straightforward solutions:
+//First is recursion.  Basically a fibonacci solution.   Works for small numbers.  Otherwise, time complexity is on 
+//on the order of 2^n.  O(2^n) not very practical.
+//Second uses dynamic programming and does not recalculate same answers as does recursion.  Time complexity is constant
+//times n or O(Cn) -> O(n)
+
+//The constraints are ascending a staircase by any combination of 1 step at a time, 2 steps at a time, and 3 steps a time.
+
+#include <iostream>
+
+//Recursive Solution - Top Down
+int numWaysRecurs(int n){
+    if(n == 1)
+        return 1;
+    if(n == 2)
+        return 2;
+    if(n == 3)
+        return 4;
+    return numWaysRecurs(n-1) + numWaysRecurs(n-2) + numWaysRecurs(n-3);
+}
+
+//Dynamic Programming Solution - Bottom Up
+int numWays(int n){
+    if(n == 1)
+        return 1;
+    if(n == 2)
+        return 2;
+    if(n == 3)
+        return 4;
+    int prev [] = {1, 2, 4};
+    int current = 3;
+    while(current < n){
+        int sum = prev[0] + prev[1] + prev[2];
+        prev[0] = prev[1];
+        prev[1] = prev[2];
+        prev[2] = sum;
+        current++;
+    }
+    return prev[2];
+}
+
+int main(){
+    std::cout << numWays(30) << std::endl;
+    std::cout << numWaysRecurs(30) << std:: endl;
+    return 0;
+}
