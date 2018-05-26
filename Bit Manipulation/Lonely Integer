@@ -1,0 +1,44 @@
+//Challenge came from HackerRank.
+//Number of ways to get this done.
+//I tried double loop and using map template but simplest solution to us jus use the bit_xor function.
+//xor work something like this:
+//  a ^ a = 0;
+//  0 ^ a = 1;
+//  It it both commutative and associative, so
+//  a ^ b = b ^ a and (a ^ b) ^ b = a ^ (b ^ b)
+//The associate propert is key to solving his challenge.
+//A sample input is {0, 0, 1, 2, 1}
+//Using the accumulater to step through the array, we begin with
+//  0^0 = 0^1 = 1^2 = ?^1 = ?
+//But the associate rule lets us write it like this:
+//  ((((0^0)^1)^2)^1) => (((0^1)^2)^1) => ((0^(1^1))^2) => (0^0)^2 = 2.
+
+
+
+#include <iostream>
+#include <functional>
+#include <vector>
+#include <numeric>
+
+using namespace std;
+
+int findNum(vector <int> a){
+    return accumulate(a.begin(), a.end(), 0, bit_xor<int>());
+}
+
+int main()
+{
+    vector<int>a;
+    int b;
+    int n;
+    cout  << "enter: ";
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        cout << "enter b: ";
+        cin >> b;
+        a.push_back(b);
+    }
+    cout << findNum(a) << endl;
+    
+    return 0;
+}
