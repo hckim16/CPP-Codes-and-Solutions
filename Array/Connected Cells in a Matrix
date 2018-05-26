@@ -1,0 +1,71 @@
+//Solution came from Gayle McDowell explanation on youtube - https://www.youtube.com/watch?v=R4Nh-EgWjyQ
+//Her solution is in Java, but it's easily understandable and easily converted to C++
+//Java passes 2d array different than C++ (or not, don't know Java rules); but to get the correct answer, you
+//must pass the 2d vector by reference.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int getRegionSize(vector<vector<int>> &matrix, int row, int column){
+    if( row < 0 || column < 0 || row >= matrix.size() || column >= matrix[0].size()){
+        return 0;
+    }
+    if(matrix[row][column] == 0){
+        return 0;
+    }
+    matrix[row][column] = 0;
+    int size = 1;
+    for(int r = row-1; r <= row+1; r++){
+        for (int c = column-1; c <= column+1; c++){
+            if(r != row || c != column){
+                size += getRegionSize(matrix, r, c);
+            }
+        }
+    }
+    return size;
+}
+
+int getBiggestRegion(vector<vector<int>> &matrix){
+    int maxRegion = 0;
+    for(int row = 0; row < matrix.size(); row++){
+        for(int column = 0; column < matrix[0].size(); column++){
+            if(matrix[row][column] == 1){
+                int size = getRegionSize(matrix, row, column);
+                maxRegion = max(size, maxRegion);
+            }
+        }
+    }
+    return maxRegion;
+}
+
+
+int main()
+{
+//this portion of the code from HackerRank directly.
+//Can easily change to whatever test input you want
+    int n;
+    cin >> n;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    int m;
+    cin >> m;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    vector<vector<int>> grid(n);
+    for (int i = 0; i < n; i++) {
+        grid[i].resize(m);
+
+        for (int j = 0; j < m; j++) {
+            cin >> grid[i][j];
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    
+    cout << getBiggestRegion(grid);
+
+    return 0;
+}
