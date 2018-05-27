@@ -1,0 +1,45 @@
+//HackerRank challenge.
+//Bit of problem for me.  Looked at how others were solving it and those solutions looked over complicated
+//for what looked like a fairly straightforward challenge
+//found pseudo code at https://en.wikipedia.org/wiki/Primality_test
+//That did the trick.
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool isPrime(int n){
+    if(n <= 1)
+        return false;
+    else if(n <= 3)
+        return true;
+    else if(n % 2 == 0 || n % 3 == 0)
+        return false;
+    int i = 5;
+    while(i * i <= n){
+        if(n % i == 0 || n % (i +2) == 0)
+            return false;
+        i = i + 6;
+    }
+    return true;
+}
+
+
+int main()
+{
+    int p;
+    cin >> p;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    for (int p_itr = 0; p_itr < p; p_itr++) {
+        int n;
+        cin >> n;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if(isPrime(n))
+            cout << "Prime" << endl;
+        else
+            cout << "Not prime" << endl;
+    }
+
+    return 0;
+}
