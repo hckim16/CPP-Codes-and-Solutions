@@ -1,6 +1,6 @@
 //Challenge came from HackerRank.
 //Number of ways to get this done.
-//I tried double loop and using map template but simplest solution to us jus use the bit_xor function.
+//I tried double loop and using map template but simplest solution was to just use the bit_xor function.
 //xor work something like this:
 //  a ^ a = 0;
 //  0 ^ a = 1;
