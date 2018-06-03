@@ -1,0 +1,50 @@
+// Rotate alphabet
+// if special symbol or non alphabet; leave in this
+// for example middle-Outz becomes okffng-Qwvb; the hyphen states in original location.
+// string and integer - rotation number - passed to function
+
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// Complete the caesarCipher function below.
+string caesarCipher(string s, int k) {
+    string temp = "";
+    for(int i = 0; i < s.length(); i++){
+        if(isupper(s[i]))
+            temp += char((s[i] + k - 65) % 26 + 65);
+        else if(!isupper(s[i]) && !islower(s[i]))
+            temp += char(s[i]);
+        else
+            temp += char((s[i] + k - 97) % 26 + 97);
+    }
+    
+    return temp;
+
+}
+
+// HackerRank input format
+int main()
+{
+    ofstream fout(getenv("OUTPUT_PATH"));
+
+    int n;
+    cin >> n;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string s;
+    getline(cin, s);
+
+    int k;
+    cin >> k;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string result = caesarCipher(s, k);
+
+    fout << result << "\n";
+
+    fout.close();
+
+    return 0;
+}
