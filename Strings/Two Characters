@@ -1,0 +1,74 @@
+//HackerRank rates this one "easy" - NOT for me.
+//Took a while to understand this one.
+//The recommended approach is to use a 2d matrix and count the number of changes between two characters.
+//The two characters with the highest number of changes is two characters that alternate the most.  
+//For a string of multiple letters, there may be more than one alternating sequence of numbers
+//For example - abeabeeafbeab has the following: abababab or bebebeb or aeaeaea, maybe more but the longest
+//string would be abababab and this program would return 8 as the length of the string.
+
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <algorithm>
+#include <cmath>
+
+int twoCharacters(std::string s){
+    
+    if(s.length() <= 1){                          // edge case, if string of 0 or 1 character, return 0
+        return 0;
+    }
+    
+    int max = 0;
+    int size = 26;                               //set size of matrix - letters in the alphabet
+ 
+    std::cout << std::endl;
+    
+    char letterMatrix[size][size];                //set char matrix to update characters in string
+    int countMatrix[size][size];                  //set int matrix to keep track of number changes
+    
+    for(int i = 0; i < size; i++){                //initialize int matrix to all zeros
+        for(int j = 0; j < size; j++){
+            countMatrix[i][j] = 0;
+        }
+    }
+    
+    for(int i = 0; i < s.length(); i++){
+        int letterIndex = s[i] - 97;              //convert character to integer to so that correct indexes are used
+        
+        for(int row = 0; row < size; row++){      //check both matrixes at iteration
+            if(countMatrix[row][letterIndex] != -1 && letterMatrix[row][letterIndex] != s[i]){ //if cell empty or different char
+                letterMatrix[row][letterIndex] = s[i]; //update char in cell
+                countMatrix[row][letterIndex]++;        //increment count
+            }
+            else
+               countMatrix[row][letterIndex] = -1;  //if char in cell is same letter; set count to -1
+        }
+        for(int col = 0; col < size; col++){      //repeat
+            if(countMatrix[letterIndex][col] != -1 && letterMatrix[letterIndex][col] != s[i]){
+                letterMatrix[letterIndex][col] = s[i];
+                countMatrix[letterIndex][col]++;
+            }
+            else
+                countMatrix[letterIndex][col] = -1;
+        }
+    }
+    
+    for(int row = 0; row < size; row++){          //find cell with highest count
+        for(int col = 0; col < size; col++){
+            if(countMatrix[row][col] > max)
+                max = countMatrix[row][col];
+        }
+    }
+    return max;
+}
+
+int main() {
+    
+    std::string s = "b";
+    
+    int result = twoCharacters(s);
+    
+    std::cout << result << std::endl;
+    
+    return 0;
+}
