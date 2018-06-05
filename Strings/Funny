@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+
+
+std::string reverse(std::string s){
+    
+    std::string r = "";
+    for(long i = s.length()-1; i >= 0; i--){
+        r.push_back(s[i]);
+    };
+    return r;
+}
+
+bool funnyString(std::string s) {
+    
+    if(s.size() <= 1)
+        return false;
+
+    std::string r = reverse(s);
+    int i = 1;
+    bool flag = true;
+    
+    while(i < s.length()){
+        if(abs((int(s[i]) - int(s[i-1]))) != abs(int(r[i]) - int(r[i-1])))    // the key is to take absolute of both original
+            flag = false;                                                     // and reversed string
+        i++;
+    }
+    
+    if(flag)
+        return true;
+    else
+        return false;
+}
+
+int main()
+{
+    ofstream fout(getenv("OUTPUT_PATH"));
+
+    int q;
+    cin >> q;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
+    string result = "";
+
+    for (int q_itr = 0; q_itr < q; q_itr++) {
+        string s;
+        getline(cin, s);
+
+        //string result = funnyString(s);
+        if(funnyString(s))
+            result = "Funny";
+        else
+            result = "Not Funny";
+
+        fout << result << "\n";
+    }
+
+    fout.close();
+
+    return 0;
+}
