@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+
+bool funnyString(std::string s) {
+    
+    if(s.size() <= 1)
+        return false;
+    
+    int left = 1;
+    long right = s.length()-1;
+    bool flag = true;
+
+    while(left < s.length()){
+        if( abs(int(s[left]) - int(s[left-1])) != abs(int(s[right-1]) - int(s[right])) ){
+            flag = false;
+            break;
+        }
+        left++;
+        right--;
+    }
+    
+    if(flag)
+        return true;
+    else
+        return false;
+}
+
+int main() {
+    
+    std::string s = "bcxz";
+
+    if(funnyString(s))
+        std::cout << "Funny";
+    else
+        std::cout << "Not Funny";
+    
+    
+    return 0;
+}
