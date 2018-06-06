@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <set>
+#include <iterator>
+#include <vector>
+
+std::vector <std::string> checkUniformWeight(std::string s, std::vector<int>queries){
+    
+    std::set <int> weightList;
+    int count = 1;
+    int currentInteger = 0;
+    int prevInteger = 0;
+    
+    for(int i = 0; i < s.length(); i++){
+        currentInteger = int(s[i] - 96);          //sets numeric value of a - 1, b - 2, c -3, etc.
+        if(currentInteger == prevInteger)
+            count++;
+        else{
+            count = 1;
+            prevInteger = currentInteger;
+        }
+        int integerWeight = currentInteger * count;
+        weightList.insert(integerWeight);
+    }
+    
+    std::vector <std::string> answer;
+    
+    for(int i = 0; i < queries.size(); i++){
+        auto search = weightList.find(queries[i]);
+        if(search != weightList.end()) {
+            answer.push_back("Yes");
+        }
+        else {
+            answer.push_back("No");
+        }
+    }
+    
+    return answer;
+}
+
+int main(){
+    std::string s = "abccddde";
+    
+    std::vector <int> queries = {1, 3, 12, 5, 9, 10};
+    std::vector <std::string> result = checkUniformWeight(s, queries);
+    for (int i = 0; i < result.size(); i++) {
+        std::cout << result[i];
+        
+        if (i != result.size() - 1) {
+            std::cout << "\n";
+        }
+    }
+    std::cout << std::endl;
+    return 0;
+}
