@@ -1,0 +1,69 @@
+// Title is just something can up with to vaguely describe what the challenge is
+// This was an on line coding challenge for a not to be named company
+// Unfortunately, I got it wrong during the test.  But I was on the right track.  
+// I thought I had it right but the test case was only right by chance.  
+// When started using my own data to test the code, it became apparent it was not correct.
+// But I was on the right path.  I ran out of time
+// This was yesterday.  
+// Today, I went back to see if what I did wrong and rewrite the code correctly.
+//
+// This code is correct for the challenge.  (darn, I was on the right track)
+// Not that it helps me as I got it wrong during the test! :(
+
+// The challenge is you are given two arrays of equal size.  Array one has key value and Array two has weight.
+// You are also given a variable which is upper limit for sum of 2 keys and a upper limit for sum of the corresponding weights.
+// Case 1 - array one = {8, 4, 2, 1, 11} with upper limit of 10 and array two = {1, 2, 3, 4, 5} with upper limit of 5.
+    // Find a pair or value in weight array two <= 5.  In this case {1, 4}, {2, 3}, and {5}.
+    // But those the pair or value in array two's corresponding keys cannot exceed upper limit of 10.
+    // The corresponding keys for {1, 4} is {8, 1} or 9, for {2, 3} is {4, 2} or 7 and for {5} is {11} or 11.
+    // Because upper limit is 10 for key total, {5} fails; but the first two pairs are good, so return "true"
+// Case 2 - array one = {8, 4, 5, 1, 11} with upper limit of 6 and array two = {1, 2, 3, 4, 5} with upper limit of 5.
+    // No matching pairs or value in array two is less than the upper limit of 6 for array one, all fail, return "false".
+  
+
+#include <algorithm>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <string>
+
+bool solution(int total_key, int total_weight, std::vector<int> &keys, std::vector<int> &weights) {
+
+    for(int i = 0; i < weights.size(); i++){
+        if(weights[i] == total_weights && keys[i] <= total_key)
+            return true;
+    }
+
+    std::map<int, int> keyWeight;
+    
+    for(int i = 0; i < keys.size(); i++){
+        keyWeight.insert(std::pair<int, int>(weights[i],keys[i]));
+    }
+    
+    for(auto it = keyWeight.begin(); it != keyWeight.end(); it++){
+        int comp = total_weight - (it-> first);
+        auto it2 = keyWeight.find(comp);
+        if(it2 != keyWeight.end() && ((it-> second) + (it2-> second)) <= total_key){
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+int main(){
+    int keyUpperLimit = 15;
+    int weightUpperLimit = 11;
+    //std::vector<int> cost = {4, 5, 1, 11, 6, 7, 15};      //returns true
+    //std::vector<int> damages = {8, 3, 4, 7, 5, 6, 10};
+    std::vector<int> keys = {4, 15, 5, 11, 6, 10, 15};      //returns false
+    std::vector<int> weights = {8, 3, 4, 7, 5, 6, 10};
+    
+    if(solution(key, weight, keys, weights))
+        std::cout << "true" << std::endl;
+    else
+        std::cout << "false" << std::endl;
+    
+    return 0;
+}
+
