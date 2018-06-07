@@ -1,0 +1,58 @@
+//This is challenge that I came across.
+//Shouldn't be difficult nor complicated but it did give me a lot of problems
+//Here's the challenge:
+//    Given a string with dashes: "abc-Ef45Gl-027-gh6"
+//    Rewrite the string to place "-" at a given K interval
+//    The "catch" - K intervals from the rear.
+//    Return new string with all capital letters
+//I removed the dashs first, then tried to insert dashes at K intervals.  I could not get a for loop to insert from the 
+//rear.  
+//I ended up reversing the string.  Adding the dashes from the beginning, and then reversing again back to the original
+//sequence.  I should be able to just reverse the insert sequence but would not work for me.
+
+include <algorithm>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <string>
+
+std::string transform(std::string s, int k){
+    
+    s.erase(remove(s.begin(), s.end(), '-'), s.end());
+    
+    std::reverse(s.begin(), s.end());
+    
+    //the standard for loop would not work, the std::insert would not recognize "i" as a pos, so I went with auto it.
+    //but it gave me a memory fault - it was going out of bounds
+    //I found this code at 
+    for(auto it = s.begin()+k; it != s.end(); it += std::min<int>(s.end()-it, k))
+        it = (it != s.begin() ? s.insert(it, '-') + 1 : it);
+    
+    std::reverse(s.begin(), s.end());
+    std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+    
+    return s;
+}
+
+
+
+
+int main(){
+    std::string s = "abc-Ef45Gl-027-gh6";
+    std::cout << transform(s, 1) << std::endl;
+    std::cout << transform(s, 2) << std::endl;
+    std::cout << transform(s, 3) << std::endl;
+    std::cout << transform(s, 4) << std::endl;
+    std::cout << transform(s, 5) << std::endl;
+    std::cout << transform(s, 6) << std::endl;
+}
+
+/*****************Output***************
+
+A-B-C-E-F-4-5-G-L-0-2-7-G-H-6
+A-BC-EF-45-GL-02-7G-H6
+ABC-EF4-5GL-027-GH6
+ABC-EF45-GL02-7GH6
+ABCEF-45GL0-27GH6
+ABC-EF45GL-027GH6
+Program ended with exit code: 0
