@@ -24,7 +24,14 @@ std::string transform(std::string s, int k){
     
     //the standard for loop would not work, the std::insert would not recognize "i" as a pos, so I went with auto it.
     //but it gave me a memory fault - it was going out of bounds
-    //I found this code at 
+    //I found this code at https://stackoverflow.com/questions/45031676/c-string-insert-iteration by https://stackoverflow.com/users/7893951/akira
+    //that solved the problem.
+    //std::min<int>(s.end()-it, k) keeps it from going out of bounds.  it iterates at k or s.end()-it and since it starts
+    //at s.begin()+k, it nevers iterates past the end of the string.
+    //I thought I could just iterate from the end to the beginning to save myself from reversing but when I change the
+    //bounds check to std::min<int>(s.begin()+it, k) it would compile.
+    //but this works, so I kept the 2 reverses
+    
     for(auto it = s.begin()+k; it != s.end(); it += std::min<int>(s.end()-it, k))
         it = (it != s.begin() ? s.insert(it, '-') + 1 : it);
     
@@ -33,9 +40,6 @@ std::string transform(std::string s, int k){
     
     return s;
 }
-
-
-
 
 int main(){
     std::string s = "abc-Ef45Gl-027-gh6";
