@@ -1,0 +1,28 @@
+
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
+int number_needed(string a, string b) {
+    
+    std::vector<int>freq(26,0);
+    int count = 0;
+    for(int i = 0; i < a.length(); i++){
+        --freq[a[i] - 'a'];
+    }
+    for(int i = 0; i < b.length(); i++){
+        ++freq[b[i] - 'a'];
+    }
+    for(int i = 0; i < freq.size(); i++){
+        count += abs(freq[i]);
+    }
+    return count;
+   
+}
+
+int main(){
+    std::string a = "abbcccdghmml";
+    std::string b = "aabdeefgkj";
+    cout << number_needed(a, b) << endl;
+    return 0;
+}
