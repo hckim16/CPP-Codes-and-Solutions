@@ -12,6 +12,15 @@ long long lcm_naive(double a, double b) {
 }
  */
 
+double gcd(double a, double b){
+    if (b == 0)
+        return a;
+    else{
+        double a_remainder = std::fmod(a,b);
+        return gcd(b, a_remainder);
+    }
+}
+
 double lcm(double a, double b){
     if(a == 0 || a == 0)
         return 0;
