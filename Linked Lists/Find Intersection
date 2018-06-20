@@ -1,0 +1,291 @@
+//Code is clunky and bloated.
+//Probably a cleaner code out there.  Will work at streamlining this more
+//Until then, the code works
+//Simple conditions
+//First, if the end nodes do not match, the lists both not merge.
+//      Side note:  The code does not look for list at intersect vis a vis two crossing lines.
+//      Side note:  Rather it looks at where one line branches off into two lines
+//                  1 - 2 - 3
+//                            \
+//                              4 - 5 - 6
+//                            /
+//        12 - 14 - 8 - 9 - 7  
+//Second, Find the lenght of the two lists.  Get the difference.  Take the longer list and traverse down to the difference
+//Third, after traversing down longer list to difference, both list now "equal"
+//Fourth, start checking if nodes have equal value.  If yes, break - you are at intersection. Else, traverse down one node
+//        each and check
+
+//Header file:
+
+#ifndef linkedListIntersection_hpp
+#define linkedListIntersection_hpp
+
+#include <stdio.h>
+
+class list{
+private:
+    struct node{
+        int key;
+        node* next;
+    };
+    node *head;
+    node *current;
+public:
+    list();
+    ~list();
+    bool empty();
+    void addNode(int k);
+    void removeNode();
+    int traverse(node *n);
+    void display();
+    void findIntersection(list a, list b);
+    int getLength(node *n);
+    node *getHead();
+};
+
+#endif /* linkedListIntersection_hpp */
+
+//Implementation File:
+
+#include <iostream>
+#include "linkedListIntersection.hpp"
+
+list::list(){
+    head = NULL;
+    current = NULL;
+}
+
+list::~list(){
+    while(!empty()){
+        removeNode();
+    }
+}
+
+bool list::empty(){
+    return (head == NULL);
+}
+
+void list::addNode(int k){
+    node *temp = new node;
+    temp-> key = k;
+    temp-> next = head;
+    head = temp;
+}
+void list::removeNode(){
+    if(!empty()){
+        node *old = head;
+        head = old-> next;
+    }
+    else{
+        exit(1);
+    };
+}
+
+list::node *list::getHead(){
+    return head;
+}
+
+int list::traverse(node *n){                      //Get value in last node
+    current = n;
+    while(current-> next != NULL){
+        current = current-> next;
+    }
+    return current-> key;
+}
+
+void list::display(){   
+    current = head;
+    while(current != NULL){
+        std::cout << current-> key << " ";
+        current = current-> next;
+    }
+}
+
+int list::getLength(node *n){                     //Get length of list
+    current = n;
+    int len = 0;
+    while(current != NULL){
+        current = current-> next;
+        len++;
+    }
+    return len;
+}
+
+void list::findIntersection(list a, list b){
+    node *temp = a.getHead();
+    node *temp1 = b.getHead();
+    int n = 0;
+    int diff = 0;
+    int count = 1;
+    if(traverse(temp)!= traverse(temp1)){                             //if last nodes' values are equal, no intersection
+        std::cout << "Linked lists do not intersect."  << std::endl;
+    }
+    else{
+        int lenTemp = getLength(temp);                                //check list length
+        int lenTemp1 = getLength(temp1);
+        if(lenTemp > lenTemp1){
+            diff = lenTemp - lenTemp1;
+            while(n < diff){                                          //check difference and set start point of longer list
+                temp = temp-> next;                                   //to start point of shorter list
+                n++;
+            }
+            while(!a.empty() && !b.empty()){
+                if(temp-> key == temp1-> key)
+                    break;
+                else{
+                    temp = temp-> next;
+                    temp1 = temp1-> next;
+                    count++;                                        //tells me which node the lists intersect at.
+                }
+            }
+        }
+        else{
+            diff = lenTemp1 - lenTemp;
+            while(n < diff){
+                temp1 = temp1-> next;
+                n++;
+            }
+            while(!a.empty() && !b.empty()){
+                if(temp-> key == temp1-> key)
+                    break;
+                else{
+                    temp = temp-> next;
+                    temp1 = temp1-> next;
+                    count++;
+                }
+            }
+        }
+        std::cout << "Lists intersect at node " << count
+        << " of shorter list, with the key value of " << temp-> key << std:: endl;
+    }
+}
+
+//Main File:
+
+#include <iostream>
+#include "linkedListIntersection.hpp"
+
+int main() {
+    list a;
+    list b;
+    list c;
+    
+    a.addNode(3);
+    a.addNode(9);
+    a.addNode(5);
+    a.addNode(3);
+    a.addNode(8);
+    a.addNode(6);
+    a.addNode(1);
+    a.addNode(7);
+    b.addNode(3);
+    b.addNode(9);
+    b.addNode(5);
+    b.addNode(7);
+    b.addNode(4);
+    std::cout << "list a: ";
+    a.display();
+    std::cout << std::endl;
+    std::cout << "list b: ";
+    b.display();
+    std::cout << std::endl;
+    c.findIntersection(a, b);
+    std::cout << std::endl;
+    
+    list d;
+    list e;
+    list f;
+    
+    d.addNode(7);
+    d.addNode(1);
+    d.addNode(4);
+    d.addNode(1);
+    d.addNode(15);
+    e.addNode(3);
+    e.addNode(9);
+    e.addNode(6);
+    e.addNode(2);
+    e.addNode(12);
+    std::cout << "list d: ";
+    d.display();
+    std::cout << std::endl;
+    std::cout << "list e: ";
+    e.display();
+    std::cout << std::endl;
+    f.findIntersection(d, e);
+    std::cout << std::endl;
+    
+    list g;
+    list h;
+    list i;
+    
+    g.addNode(3);
+    g.addNode(4);
+    g.addNode(6);
+    g.addNode(5);
+    g.addNode(9);
+    h.addNode(3);
+    h.addNode(4);
+    h.addNode(8);
+    h.addNode(7);
+    h.addNode(2);
+    h.addNode(1);
+    h.addNode(0);
+    h.addNode(1);
+    std::cout << "list g: ";
+    g.display();
+    std::cout << std::endl;
+    std::cout << "list h: ";
+    h.display();
+    std::cout << std::endl;
+    i.findIntersection(g, h);
+    std::cout << std::endl;
+    
+    list j;
+    list k;
+    list l;
+    
+    j.addNode(17);
+    j.addNode(13);
+    j.addNode(14);
+    j.addNode(19);
+    j.addNode(15);
+    k.addNode(23);
+    k.addNode(29);
+    k.addNode(26);
+    k.addNode(22);
+    k.addNode(12);
+    std::cout << "list j: ";
+    j.display();
+    std::cout << std::endl;
+    std::cout << "list k: ";
+    k.display();
+    std::cout << std::endl;
+    l.findIntersection(j, k);
+    std::cout << std::endl;
+    
+    return 0;
+}
+
+/********************OUTPUT********************
+
+list a: 7 1 6 8 3 5 9 3 
+list b: 4 7 5 9 3 
+Lists intersect at node 3 of shorter list, with the key value of 5
+
+list d: 15 1 4 1 7 
+list e: 12 2 6 9 3 
+Linked lists do not intersect.
+
+list g: 9 5 6 4 3 
+list h: 1 0 1 2 7 8 4 3 
+Lists intersect at node 4 of shorter list, with the key value of 4
+
+list j: 15 19 14 13 17 
+list k: 12 22 26 29 23 
+Linked lists do not intersect.
+
+Program ended with exit code: 0
+
+************************************************/
+
