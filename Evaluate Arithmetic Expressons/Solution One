@@ -1,3 +1,8 @@
+/************Output******************
+Enter an expression:  ((5*6)+(2*9))/((7-3)*(1+1))
+Answer is 6
+
+
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -117,10 +122,11 @@ void numStack::displayNum()
 */
 
 int evaluate(string e){
-    
+
     signStack S;
     numStack N;
     char op;
+    int final;
     for(int i = 0; i < e.length(); i++){
         //first checks to see if the token is a digit
         if(isdigit(e[i])) {
@@ -158,8 +164,29 @@ int evaluate(string e){
             }
         }
     }
-    //pop last value in number stack which should be answer
-    return N.pop();
+    if(!S.isEmpty()){
+        op = S.pop();
+        int val1 = N.pop();
+        int val2 = N.pop();
+        if(op == '+'){
+            //pop values and performance math and push back into number stack
+            final =  (val2 + val1);
+        }
+        else if(op == '-'){
+            final =  (val2 - val1);
+        }
+        else if(op == '*'){
+            final =  (val2 * val1);
+        }
+        else{
+            final = (val2 / val1);
+        }
+    }
+    else
+        final = N.pop();
+    
+    return final;
+    
 }
 
 int main(){
@@ -167,6 +194,6 @@ int main(){
     
     cout << "Enter an expression:  ";
     getline(cin, expression);
-    cout << evaluate(expression) << endl;
+    cout << "Answer is " << evaluate(expression) << endl;
     return 0;
 }
