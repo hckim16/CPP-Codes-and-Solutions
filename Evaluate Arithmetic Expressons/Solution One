@@ -1,6 +1,11 @@
 /************Output******************
 Enter an expression:  ((5*6)+(2*9))/((7-3)*(1+1))
 Answer is 6
+Enter an expression:  ((9+2)*(8*7))-((6/3)*5)
+Answer is 606
+**********************************/
+
+
 
 
 #include <iostream>
