@@ -1,0 +1,145 @@
+// Looks for a loop.
+// If there is a loop, returns the node (rather, the key at that node) where the loop begins
+
+// Header File:
+
+#ifndef loop_hpp
+#define loop_hpp
+
+#include <stdio.h>
+
+class node{
+public:
+    int key;
+    node *next;
+    friend class loop;
+};
+
+class loop{
+private:
+    node *head;
+    node *current;
+public:
+    loop();
+    ~loop();
+    bool isEmpty();
+    void addNode(int k);
+    void removeNode();
+    node *getHead();
+    void display();
+    node *isLoop(node *n);
+};
+
+#endif /* loop_hpp */
+
+// Implementation File:
+
+#include <iostream>
+#include "loop.hpp"
+
+loop::loop(){
+    head = NULL;
+    current = NULL;
+}
+
+loop::~loop(){
+    while(!isEmpty()){
+        removeNode();
+    }
+}
+
+bool loop::isEmpty(){
+    return head == NULL;
+}
+
+void loop::addNode(int k){
+    node *temp = new node;
+    temp-> key = k;
+    temp-> next = head;
+    head = temp;
+}
+
+void loop::removeNode(){
+    if(!isEmpty()){
+        node *old = head;
+        head = old-> next;
+    }
+    else
+        exit(1);
+}
+
+node *loop::getHead(){
+    return head;
+}
+
+void loop::display(){
+    current = head;
+    while(current != NULL){
+        std::cout << current-> key << " ";
+        current = current-> next;
+    }
+}
+
+node *loop::isLoop(node *n){
+    if(n == NULL)
+        return NULL;
+    node *fast = n-> next;
+    node *slow = n;
+    while(fast != NULL && slow != NULL){
+        fast = fast-> next-> next;
+        slow = slow-> next;
+        if(fast  == slow){
+            return fast;
+            break;
+        }
+    }
+    return NULL;
+}
+
+// Main File:
+
+#include <iostream>
+#include "loop.hpp"
+
+int main() {
+    
+    loop a;
+    
+    a.addNode(3);
+    a.addNode(9);
+    a.addNode(5);
+    a.addNode(4);
+    a.addNode(8);
+    a.addNode(6);
+    std::cout << "list a: ";
+    a.display();
+    std::cout << std::endl;
+    
+    node *temp = a.getHead();
+    
+    //temp-> next-> next-> next-> next-> next =
+    //temp-> next-> next;
+    
+    temp-> next-> next-> next-> next-> next = NULL;
+    
+    if(a.isLoop(temp) == NULL)
+        std::cout << "No Loop" << std::endl;
+    else{
+        std::cout << "Loop is present at " << a.isLoop(temp)-> key << std::endl;
+        exit(1);
+    }
+       
+    return 0;
+}
+
+/*********************Output**********************
+
+temp-> next-> next-> next-> next-> next = NULL;
+list a: 6 8 4 5 9 3 
+No Loop
+Program ended with exit code: 0
+
+temp-> next-> next-> next-> next-> next = temp-> next-> next;
+list a: 6 8 4 5 9 3 
+Loop is present at 4
+Program ended with exit code: 1
