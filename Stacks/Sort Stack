@@ -1,0 +1,43 @@
+#include <iostream>
+#include <stack>
+
+void display(std::stack<int>a){
+    std::stack<int>temp = a;
+    while(!temp.empty()){
+        std::cout << temp.top() << std::endl;
+        temp.pop();
+    }
+}
+
+void sortStack(std::stack<int>a){
+    std::stack<int>a1 = a;
+    std::stack<int>a2;
+    int temp;
+    while(!a1.empty()){
+        temp = a1.top();
+        a1.pop();
+        while(!a2.empty() && a2.top() < temp){
+            a1.push(a2.top());
+            a2.pop();
+        }
+        a2.push(temp);
+    }
+    
+    display(a2);
+    
+}
+
+int main() {
+    
+    std::stack<int>a;
+    a.push(4);
+    a.push(2);
+    a.push(5);
+    a.push(9);
+    a.push(7);
+    a.push(3);
+    
+    sortStack(a);
+    
+    return 0;
+}
