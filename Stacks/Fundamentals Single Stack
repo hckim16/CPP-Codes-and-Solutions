@@ -1,0 +1,93 @@
+#include <iostream>
+#include <string>
+
+//create a node struct
+struct Node{
+    std::string data;
+    Node *next;
+};
+
+class Stack {
+private:
+    Node *top;
+public:
+    Stack();    //constructor
+    ~Stack();   //deconstructor
+    void push(std::string d);   //pushes a node onto top of stack
+    std::string pop();          //pop top node off the stack
+    std::string toString();     //display the stack's content from top to bottom
+    bool isEmpty();
+};
+
+Stack::Stack() {
+    //initialize stack to be empty
+    top = NULL;
+}
+
+Stack::~Stack() {
+    //deconstructor to delete all of the dynamic variables
+    while(!isEmpty())
+        pop();
+}
+
+void Stack::push(std::string d) {
+    //Need a new node to store d in
+    Node *temp = new Node;
+    temp-> data = d;
+    temp-> next = top;  //point the new node's next to the old top of the stack
+    top = temp;         //point top to the new top of the stack
+}
+
+std::string Stack::pop() {
+    if(!isEmpty()) {
+        std::string value = top-> data;
+        Node *oldtop = top;
+        top = oldtop-> next;
+        delete oldtop;
+        return value;
+    }
+    else{
+        //can't pop from an empty stack
+        std::cout << "You can't pop from an empty stack!" << std::endl;
+        exit(1);
+    }
+}
+
+std::string Stack::toString() {
+    std::string result = "(top) -> ";
+    if(isEmpty()) {
+        result = result + "NULL";
+        return result;
+    }
+    else{
+        Node *current = top;
+        while(current != NULL) {
+            result = result + current-> data + " -> ";
+            current = current-> next;
+        }
+        result = result  + "(END)";
+        return result;
+    }
+}
+
+bool Stack::isEmpty() {
+    return (top == NULL);
+}
+
+
+int main() {
+    
+    Stack *s = new Stack();
+    std::cout << "Output when empty: " << std::endl
+    << s-> toString() << std::endl;
+    s-> push("Cheeseburger");
+    s-> push("Pizza");
+    s-> push("Large Coffee");
+    s-> pop();
+    std::cout << "Output when not empty: " << std::endl
+    << s-> toString() << std::endl;
+    
+    delete s;
+    
+    return 0;
+}
