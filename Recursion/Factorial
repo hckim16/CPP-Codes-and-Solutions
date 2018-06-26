@@ -2,6 +2,8 @@
 #include <vector>
 #include <stack>
 
+
+//Recursive Case
 int factorial(int n){
     if(n == 1)
         return 1;
@@ -9,6 +11,7 @@ int factorial(int n){
         return n * factorial(n-1);
 }
 
+//Iterative Case
 int factorial2 (int n) {
     int num = 1;
     while(n > 0){
