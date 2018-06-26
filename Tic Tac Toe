@@ -1,0 +1,149 @@
+#include <cstdlib>
+#include <iostream>
+#include <ctime>
+#include <string>
+#define SIZE 3
+
+class Game{
+private:
+    char board[SIZE][SIZE];
+public:
+    Game();
+    void makeBoard();
+    void showBoard();
+    void playerTurn();
+    void computerTurn();
+    void checkWin();
+};
+
+Game::Game(){
+    makeBoard();
+    showBoard();
+    checkWin();
+    while(true){
+        playerTurn();
+        checkWin();
+        computerTurn();
+        showBoard();
+        checkWin();
+    }
+}
+
+void Game::makeBoard(){
+    int number = 1;
+    
+    for(int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++){
+            board[i][j] = std::to_string(number).c_str()[0];
+            number++;
+        }
+    }
+}
+
+void Game::showBoard(){
+    printf("\n-------------\n");
+    for(int i = 0; i < SIZE; i++){
+        printf("|");
+        for(int j = 0; j < SIZE; j++){
+            printf(" %c |", board[i][j]);
+        }
+        printf("\n-------------\n");
+    }
+}
+
+void Game::checkWin(){
+    const char *winningMoves[8] = {
+        "123",
+        "456",
+        "789",
+        "147",
+        "258",
+        "369",
+        "159",
+        "357",
+    };
+    for(int i = 0; i < 8; i++){
+        bool winner = true;
+        char previousSpot = '0';
+        const char *winningMove = winningMoves[i];
+        for(int j = 0; j < 3; j++){
+            char enteredNum = winningMove[j];
+            int spot = enteredNum - '0';
+            int index = spot - 1;
+            int row = index / SIZE;
+            int col = index % SIZE;
+            char currentSpot = board[row][col];
+            if(previousSpot == '0'){
+                previousSpot = currentSpot;
+            }
+            else if(previousSpot == currentSpot){
+                continue;
+            }
+            else{
+                winner = false;
+                break;
+            }
+        }
+        if(winner){
+            puts("----------We have a Winner----------");
+            printf("Looks like %c won, congratulations!\n", previousSpot);
+            exit(0);
+            break;
+        }
+    }
+}
+
+void Game::playerTurn(){
+    std::string input;
+    while(true){
+        puts("Which square do you want to play");
+        getline(std::cin, input);
+        if(input != ""){
+            char entered = input.c_str()[0];
+            if(entered >= '1' && entered <= '9'){
+                int num = entered - '0';
+                int index = num - 1;
+                int row = index / SIZE;
+                int col = index % SIZE;
+                char spot = board[row][col];
+                if(spot == 'X' || spot == 'O'){
+                    puts("Spot already taken, choose again");
+                }
+                else{
+                    board[row][col] = 'X';
+                    break;
+                }
+            }
+            else{
+                puts("You need to enter a number between 1 and 9");
+            }
+        }
+        else{
+            puts("You need to enter a square to play");
+        }
+    }
+}
+
+void Game::computerTurn(){
+    while(true){
+        int computerTurn = (rand() % 9) + 1;
+        int row = (computerTurn - 1) / SIZE;
+        int col = (computerTurn - 1) % SIZE;
+        char spot = board[row][col];
+        if(spot == 'X' || spot == 'O'){
+            continue;
+        }
+        else{
+            printf("The computer will play at %d.\n", computerTurn);
+            board[row][col] = 'O';
+            break;
+        }
+    }
+}
+
+int main() {
+    
+    Game TicTacToe;
+    
+    return 0;
+}
