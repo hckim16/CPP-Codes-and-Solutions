@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+
+int factorial(int n){
+    if(n == 1)
+        return 1;
+    else
+        return n * factorial(n-1);
+}
+
+int factorial2 (int n) {
+    int num = 1;
+    while(n > 0){
+        num *= n;
+        n--;
+    }
+    return num;
+}
+
+int main() {
+    
+    int n;
+    std::cout << "Enter number to compute factorials: ";
+    std::cin >> n;
+    std::cout << std::endl;
+    std::cout << "Factorial results for recursive method: " << std::endl;
+    for(int i = 1; i <= n; i++){
+        std::cout << "factorial of " << i << " is " << fact(i) << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << "Factorial results for iterative method: " << std::endl;
+    for(int i = 1; i <= n; i++){
+        std::cout << "factorial of " << i << " is " << fact2(i) << std::endl;
+    }
+    
+    return 0;
+}
+
+/***************OutPut*******************
+
+Enter number to compute factorials: 10
+
+Factorial results for recursive method: 
+factorial of 1 is 1
+factorial of 2 is 2
+factorial of 3 is 6
+factorial of 4 is 24
+factorial of 5 is 120
+factorial of 6 is 720
+factorial of 7 is 5040
+factorial of 8 is 40320
+factorial of 9 is 362880
+factorial of 10 is 3628800
+
+Factorial results for iterative method: 
+factorial of 1 is 1
+factorial of 2 is 2
+factorial of 3 is 6
+factorial of 4 is 24
+factorial of 5 is 120
+factorial of 6 is 720
+factorial of 7 is 5040
+factorial of 8 is 40320
+factorial of 9 is 362880
+factorial of 10 is 3628800
+Program ended with exit code: 0
+
+**************************************/
