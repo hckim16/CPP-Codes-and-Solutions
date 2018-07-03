@@ -84,20 +84,45 @@ bool evaluate(string s){
     
     signStack S;
     
+    /************Method 1 - Short Code *************
+    
+    if(s.length() % 2 == 0){               // check length, if even check matches
+        for(int i = 0; i < s.length(); i++){
+            if(s[i] == '(' || s[i] == '{' || s[i] == '['){
+                S.push(s[i]);
+            }else{
+                if(S.empty()){
+                    if(s[i] == ')' || s[i] == '}' || s[i] == ']')
+                        return false;
+                }
+                else{
+                    if(match(S.top(), s[i]))
+                        S.pop();
+                    else
+                        return false;
+                }
+            }
+        }
+    }
+    else                                    //if length is odd, no match!
+        return false;
+    
+    /*******Method 2 - long code
+    
     for(int i = 0; i < s.length(); i++){
-        //opening brackets get pushed to stack
+                                                //opening brackets get pushed to stack
         if(s[i] == '(')
             S.push(s[i]);
         else if(s[i] == '{')
             S.push(s[i]);
         else if(s[i] == '[')
             S.push(s[i]);
-        //if stack is empty and bracket is closing type, no match, if types different no match
+                                                //if stack is empty and bracket is closing type, no match, if types different no match
         else if(s[i] == ')'){
             if(S.isEmpty() || !match(S.top(), s[i]))
                 return false;
             else
-            //other discard closing bracket and pop opening bracket on top of stack
+                                                //other discard closing bracket and pop opening bracket on top of stack
                 S.pop();
         }
         else if(s[i] == '}'){
@@ -113,6 +138,9 @@ bool evaluate(string s){
                 S.pop();
         }
     }
+    
+    /*******************************
+    
     //if stack is empty, then all brackets matched.
     if(S.isEmpty())
         return true;
