@@ -1,0 +1,26 @@
+#include <iostream>
+#include <string>
+
+std::string LongestWord(std::string s) { 
+    std::string word = "";
+    std::string max = "";
+    for(int i = 0; i < s.length(); i++){
+        if(!isalpha(s[i])){
+            if(word.length() > max.length()){
+                max = word;
+            }
+            word.clear();
+            continue;
+        }
+        word += s[i];
+    }
+    if(max.length() < word.length()){
+        max = word;
+    }
+    return max;
+}
+
+int main() { 
+  std::cout << LongestWord("What is the longest word in the sentence?");
+  return 0;
+}
