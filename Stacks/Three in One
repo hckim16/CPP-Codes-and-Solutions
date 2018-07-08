@@ -1,0 +1,68 @@
+// So not sure if I address this challenge correctly.  The problem read, "Describe how you could use a single array
+// to implement 3 stacks
+
+// I began with a single vector.  Passed that vector to a function which populated 3 stacks.  
+// Each stack capped at 1/3 size of vector.
+// Solution very simplistic, so I'm missing something here.
+
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<cmath>
+#include<algorithm>
+
+void create3Stacks(std::vector<int>vec);
+
+int main(){
+    std::vector<int>vec;
+    int n;
+    for(int i = 0; i < 10; i++){
+        std::cout << "Enter number: ";
+        std:: cin >> n;
+        vec.push_back(n);
+    }
+    
+    create3Stacks(vec);
+    
+    return 0;
+}
+
+void create3Stacks(std::vector<int>vec){
+    std::stack<int>S1;
+    std::stack<int>S2;
+    std::stack<int>S3;
+    
+    long n = vec.size();
+    int i = 0;
+    while(i < floor(n/3)){
+        S1.push(vec[i]);
+        i++;
+    }
+    while(i < floor(2*n/3)){
+        S2.push(vec[i]);
+        i++;
+    }
+    while(i < n){
+        S3.push(vec[i]);
+        i++;
+    }
+    
+    std::cout << "Contents of Stack 1: ";
+    while(!S1.empty()){
+        std::cout << S1.top() << " ";
+        S1.pop();
+    }
+    std::cout << std::endl;
+    std::cout << "Contents of Stack 1: ";
+    while(!S2.empty()){
+        std::cout << S2.top() << " ";
+        S2.pop();
+    }
+    std::cout << std::endl;
+    std::cout << "Contents of Stack 1: ";
+    while(!S3.empty()){
+        std::cout << S3.top() << " ";
+        S3.pop();
+    }
+    std::cout << std::endl;
+}
