@@ -61,23 +61,16 @@ bool stack::isEmpty(){
 
 void stack::push(int v){
     node *temp = new node;
-    if(top == NULL){
+    if(top == NULL || v >= top-> value){
         temp-> value = v;
         temp-> next = top;
         top = temp;
     }
     else{
-        if(v < top-> value){        //Check if incoming value is less than top value in stack
-            min = v;                //If it is, set to min
-            temp-> value = v;
-            temp-> next = top;
-            top = temp;
-        }
-        else{
-            temp-> value = v;
-            temp-> next = top;
-            top = temp;
-        }
+        min = v;
+        temp-> value = v;
+        temp-> next = top;
+        top = temp;
     }
 }
 
