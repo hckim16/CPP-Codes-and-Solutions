@@ -1,0 +1,79 @@
+#include <iostream>
+
+class singlyLinkedList{
+private:
+    struct node{
+        int data;
+        node *next;
+    };
+    node *head;
+    
+public:
+    singlyLinkedList();
+    void addNode(int d);
+    void findMiddleNode();
+    void display();
+};
+
+singlyLinkedList::singlyLinkedList(){
+    head = NULL;
+}
+
+void singlyLinkedList::addNode(int d){
+    node *temp = new node;
+    temp-> data = d;
+    temp-> next = head;
+    head = temp;
+}
+
+void singlyLinkedList::findMiddleNode(){
+    node *fast = new node;
+    node *slow = new node;
+    
+    fast = head;
+    slow = head;
+    int count = 1;
+    
+    while(fast != NULL && fast-> next != NULL){
+        fast = fast-> next-> next;
+        slow = slow-> next;
+        count++;
+    }
+    
+    std::cout << "The middle node at node " << count << " has value of " << slow-> data << std::endl;
+}
+
+void singlyLinkedList::display(){
+    node *temp = head;
+    while(temp != NULL){
+        std::cout << temp-> data << " ";
+        temp = temp-> next;
+    }
+}
+
+int main(){
+    
+    singlyLinkedList L;
+    
+    L.addNode(4);
+    L.addNode(14);
+    L.addNode(42);
+    L.addNode(9);
+    L.addNode(22);
+    
+    L.display();
+    std::cout<< std::endl;
+    
+    L.findMiddleNode();
+    
+    return 0;
+}
+
+/************Output******************
+
+22 9 42 14 4 
+The middle node at node 3 has value of 42
+Program ended with exit code: 0
+
+
+*************************************/
