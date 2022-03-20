@@ -87,6 +87,29 @@ void levelorder(tree *root){
     }
 }
 
+/*
+deque<Node*> treeQueue;
+
+void levelOrder(Node* root){
+    if( root ){
+        treeQueue.push_back(root);
+    }
+    while( !treeQueue.empty() ){  
+        Node* tree = treeQueue.front();
+        treeQueue.pop_front();
+
+        cout << tree->data << " ";
+
+        if( tree->left ){
+            treeQueue.push_back( tree->left );
+        }
+        if( tree->right ){
+            treeQueue.push_back( tree->right );
+        }
+    }
+}
+*/
+
 void addNode(struct node **head, int k){
     node *temp = new node;
     temp-> key = k;
