@@ -54,3 +54,28 @@ int main() {
     
     return 0;
 }
+
+
+// 05/16/22 - another option
+std::string compress(std::string s) {
+ 
+  int i = 0;
+  int count = 1;
+  std::string result = "";
+  
+  for (int j = 1; j < s.length() + 1; j++) {
+    if (s[j - 1] == s[j]) count++;
+    else {
+      if (count > 1) {
+        result += std::to_string(count);
+        result += s[i];
+        count = 1;
+        i = j;
+      } else {
+        result += s[i];
+        i = j;
+      }
+    }
+  }
+  return result;
+}
