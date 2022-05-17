@@ -1,0 +1,16 @@
+char mostFrequentChar(std::string s) {
+
+  std::unordered_map<char, int> map;
+  
+  for (char ch : s) {
+    map[ch]++;
+  }
+  
+  char most_freq = '\0';
+  
+  for (char ch : s) {
+    if (map[ch] > map[most_freq]) most_freq = ch;
+  }
+   
+  return most_freq;
+}
