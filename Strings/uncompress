@@ -1,0 +1,19 @@
+std::string uncompress(std::string s) {
+  int i = 0;
+  int j = 0;
+  std::string num = "0123456789";
+  std::string results = "";
+  
+  while (j < s.length()) {
+    if (num.find(s[j]) != std::string::npos) j++;
+    else {
+      int count = std::stoi(s.substr(i, j));
+      for (int k = 0; k < count; k++) {
+          results += s[j];
+      }
+      j++;
+      i = j;
+    }
+  }
+  return results;
+}
