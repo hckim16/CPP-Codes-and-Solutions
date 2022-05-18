@@ -16,6 +16,8 @@ bool anagrams(std::string s1, std::string s2) {
 class Solution {
 public:
     bool isAnagram(string s, string t) {
+    
+        if (s1.length() != s2.length()) return false;
         
         sort(s.begin(), s.end());
         sort(t.begin(), t.end());
