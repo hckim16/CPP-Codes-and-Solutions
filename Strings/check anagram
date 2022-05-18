@@ -10,3 +10,19 @@ bool anagrams(std::string s1, std::string s2) {
   
   return true;
 }
+
+// 2nd solution using stl algorithms
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
+        
+        bool cmp = equal(s.begin(), s.end(), t.begin(), t.end());
+        
+        return cmp;
+        
+    }
+};
