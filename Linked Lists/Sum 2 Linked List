@@ -237,3 +237,31 @@ int main() {
     
     return 0;
 }
+
+// Down and dirty solution but it works and its short, I think also better: 
+
+    node* addTwoNumbers(node* l1, node* l2) {
+        
+        node dummyHead (-1);
+        node* tail = &dummyHead;
+        
+        node* current1 = l1;
+        node* current2 = l2;
+        int carry = 0;
+        
+        while (current1 != nullptr || current2 != nullptr || carry > 0) {
+            int val1 = current1 == nullptr ? 0 : current1-> val;
+            int val2 = current2 == nullptr ? 0 : current2-> val;
+            int sum = val1 + val2 + carry;
+            node* newNode = new node(sum % 10);
+            tail-> next = newNode;
+            tail = tail-> next;
+            
+            if (sum > 9) carry = 1;
+            else carry = 0;
+            
+            if (current1 != nullptr) current1 = current1-> next;
+            if (current2 != nullptr) current2 = current2-> next;
+        }
+        return dummyHead.next;
+    }
